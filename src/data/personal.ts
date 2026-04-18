@@ -1,0 +1,20 @@
+export const personal = {
+  name: 'Rizky Milan Alpasya Wijaksono',
+  shortName: 'Rizky Milan',
+  role: 'Software Engineer & Site Reliability Engineer',
+  tagline: 'Building resilient backend systems and scalable observability platforms.',
+  bio: `I'm a software engineer based in Bandung, Indonesia, with a passion for building systems that don't break under pressure. My journey started in 2019 with native PHP and has evolved through full-stack development, backend engineering with Ruby on Rails and Go, and into Site Reliability Engineering — building the observability platforms that keep production healthy.`,
+  evolution: 'Web Dev → Backend Engineer → SRE & Platform Engineer',
+  email: 'rizkymilanalp@gmail.com',
+  github: 'https://github.com/rizkymilan',
+  linkedin: 'https://linkedin.com/in/rizkymilan',
+  location: 'Bandung, Indonesia',
+  resumeUrl: '/CV_Rizky_Milan_2026.pdf',
+  avatarUrl: 'https://ui-avatars.com/api/?name=Rizky+Milan&size=400&background=18181B&color=FAFAFA&bold=true&format=png',
+  stats: {
+    projectsCompleted: 68,
+    completionRate: 88,
+    yearsExperience: 6,
+    domainsOwned: 3,
+  },
+} as const
