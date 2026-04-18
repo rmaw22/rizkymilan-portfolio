@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN TOKENS — Rizky Milan Portfolio
+   Source: ui-ux-pro-max design system
+   ============================================================ */
+
+:root {
+  /* Backgrounds */
+  --bg-primary: #fafafa;
+  --bg-secondary: #f4f4f5;
+  --bg-card: #ffffff;
+
+  /* Text */
+  --text-primary: #09090b;
+  --text-secondary: #3f3f46;
+  --text-muted: #71717a;
+
+  /* Accent — electric blue */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-subtle: #eff6ff;
+
+  /* Border */
+  --border: #e4e4e7;
+  --border-strong: #d1d5db;
+
+  /* Terminal green tint for SRE aesthetic */
+  --terminal: #16a34a;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --accent: #60a5fa;
+  --accent-hover: #93c5fd;
+  --accent-subtle: #1e3a5f;
+
+  --border: #334155;
+  --border-strong: #475569;
+
+  --terminal: #4ade80;
+}
+
+/* ============================================================
+   TAILWIND v4 THEME TOKENS
+   ============================================================ */
+
+@theme inline {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-card: var(--bg-card);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-terminal: var(--terminal);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Fira Code", monospace;
+}
+
+/* ============================================================
+   BASE RESET & GLOBAL STYLES
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Selection highlight */
+::selection {
+  background-color: var(--accent);
+  color: #ffffff;
+}
+
+/* Focus ring — visible on keyboard nav */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Scrollbar — subtle */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+/* Smooth anchor scroll offset for fixed navbar */
+[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* ============================================================
+   REDUCED MOTION — Accessibility
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
