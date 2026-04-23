@@ -89,9 +89,8 @@ export function Navbar({ personal }: { personal: any }) {
             <ThemeToggle />
             <a
               href={personal.resumeUrl}
-              download
               id="nav-resume-btn"
-              aria-label="Download resume PDF"
+              aria-label="Request resume via email"
               className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium rounded-lg cursor-pointer transition-all duration-200"
               style={{
                 background: 'var(--accent)',
@@ -104,7 +103,7 @@ export function Navbar({ personal }: { personal: any }) {
                 (e.currentTarget as HTMLElement).style.background = 'var(--accent)'
               }}
             >
-              Resume
+              Request CV
             </a>
 
             {/* Mobile menu toggle */}
@@ -160,12 +159,11 @@ export function Navbar({ personal }: { personal: any }) {
                 <li className="px-5 py-3">
                   <a
                     href={personal.resumeUrl}
-                    download
                     onClick={closeMobile}
                     className="flex items-center justify-center w-full py-2 text-sm font-medium rounded-lg cursor-pointer"
                     style={{ background: 'var(--accent)', color: '#ffffff' }}
                   >
-                    Download Resume
+                    Request CV
                   </a>
                 </li>
               </ul>
