@@ -1,12 +1,12 @@
-# Portfolio Website Planning Document: Rizky Milan Alpasya Wijaksono
-**Version:** 2.0
+# Planning Document
+**Version:** 3.0
 **Last Updated:** April 2026
 
 ---
 
 ## 1. Project Overview & Objectives
 
-- **Project Name:** Rizky Milan Personal Portfolio
+- **Project Name:** Personal Portfolio
 - **Primary Goal:** Create a high-performance, minimalist static website to showcase technical skills, career progression (from Full-Stack/Backend to SRE/Infrastructure), and business impact.
 - **Target Audience:**
   - **HR / Recruiters:** Looking for clear business impact, keyword matches (Go, Ruby, Next.js, Docker, Prometheus), and professional presentation.
@@ -21,14 +21,14 @@
 
 | Category | Tool / Library | Notes |
 |---|---|---|
-| Framework | Next.js (App Router) | SSG output mode |
-| Styling | Tailwind CSS | Utility-first, responsive |
+| Framework | Next.js 15 (App Router) | SSG `output: 'export'` |
+| Styling | Tailwind CSS v4 | Utility-first, responsive |
 | Theme Management | `next-themes` | Light / Dark / System |
-| Animations | Framer Motion | Strict usage: subtle transitions only |
-| Icons | Lucide React or Heroicons | Lightweight SVG |
-| Typography | Inter (body) + JetBrains Mono / Fira Code | Code & tech stack highlights |
-| CMS | Keystatic CMS | Local, file-based, UI-driven |
-| Package Manager | pnpm | Faster installs, strict dep management |
+| Animations | Framer Motion + GSAP | Subtle transitions; GSAP for cinematic sequences |
+| Icons | Lucide React | Lightweight SVG |
+| Typography | Inter + Space Grotesk + JetBrains Mono | Loaded via `next/font` |
+| Content | TypeScript data files (`src/data/`) | Typed, edited directly in code |
+| Package Manager | npm | — |
 | Version Control | Git & GitHub | — |
 | Interactive UI (Playground) | React state + Framer Motion + `@dnd-kit/core` | Per game type |
 
@@ -39,8 +39,8 @@
 - **Default Mode:** Light Mode
 - **Options:** Light / Dark / System
 - **Library:** `next-themes`
-- **Implementation:** CSS custom properties (design tokens), NOT hardcoded Tailwind `dark:` classes
-- **Scope:** Applied globally via `ThemeProvider` in root layout
+- **Implementation:** CSS custom properties (design tokens) + Tailwind `dark:` variants
+- **Scope:** Applied globally via `ThemeProvider` in `(portfolio)` layout
 
 ```css
 /* Design Token Approach */
@@ -63,13 +63,11 @@
 }
 ```
 
-> All Tailwind classes must reference these tokens, not hardcode color values.
-
 ---
 
 ## 4. Architecture & Deployment Strategy
 
-- **Rendering Method:** Static Site Generation (SSG). `output: 'export'` in `next.config.js`.
+- **Rendering Method:** Static Site Generation (SSG). `output: 'export'` in `next.config.ts`.
 - **Hosting Provider:** Cloudflare Pages
   - Fast edge network, aligns with SRE/Infrastructure persona
   - Zero-config static deployments, free SSL
@@ -83,87 +81,80 @@
 
 ```
 /
-├── app/
-│   ├── layout.tsx                  ← Root layout with ThemeProvider
-│   ├── page.tsx                    ← Home / Portfolio page
-│   ├── not-found.tsx               ← Custom 404 page
-│   └── playground/
-│       ├── layout.tsx              ← Playground shared layout
-│       ├── page.tsx                ← Playground gallery (grid of all mini-apps)
-│       ├── quiz/
-│       │   └── [slug]/
-│       │       └── page.tsx        ← Dynamic quiz page per topic
-│       ├── flip-card/
-│       │   └── page.tsx
-│       └── [slug]/
-│           └── page.tsx            ← Future-proof: dynamic route for new games
-│
-├── components/
-│   ├── ui/                         ← Shared base components (Button, Badge, etc.)
-│   ├── layout/                     ← Navbar, Footer, ThemeToggle
-│   ├── sections/                   ← Hero, About, Skills, Projects, Contact
-│   └── playground/
-│       ├── GameCard.tsx            ← Card shown in gallery
-│       ├── QuizEngine.tsx          ← Reusable quiz logic component
-│       ├── FlipCard.tsx            ← Flip card component
-│       └── PlaygroundFilter.tsx    ← Filter by type/difficulty
-│
-├── content/
-│   ├── projects/                   ← MDX per project (STAR method)
-│   │   ├── orion.mdx
-│   │   ├── usphere.mdx
-│   │   └── ukirama.mdx
-│   ├── skills.yaml                 ← Grouped skills data
-│   ├── about.mdx                   ← About Me content
-│   └── playground/
-│       ├── quiz-js-basics.yaml
-│       ├── quiz-soft-skills.yaml
-│       └── quiz-general.yaml
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx                  ← Minimal root layout (html/body + fonts)
+│   │   ├── not-found.tsx               ← Custom 404 page
+│   │   ├── robots.ts
+│   │   ├── sitemap.ts
+│   │   ├── globals.css
+│   │   ├── (portfolio)/
+│   │   │   ├── layout.tsx              ← Portfolio layout (ThemeProvider, Navbar, Footer, metadata)
+│   │   │   └── page.tsx                ← Home / Portfolio page
+│   │   └── playground/                 ← (Phase 4)
+│   │       ├── layout.tsx
+│   │       ├── page.tsx                ← Gallery grid
+│   │       ├── quiz/[slug]/page.tsx
+│   │       └── flip-card/page.tsx
+│   │
+│   ├── components/
+│   │   ├── ui/                         ← Shared base components (Button, Badge, etc.)
+│   │   ├── layout/                     ← Navbar, Footer, ThemeToggle
+│   │   ├── sections/                   ← Hero, About, Skills, Projects, Contact
+│   │   └── playground/                 ← (Phase 4) GameCard, QuizEngine, FlipCard
+│   │
+│   ├── data/                           ← Source of truth for all content
+│   │   ├── personal.ts                 ← Name, role, bio, social links, stats
+│   │   ├── skills.ts                   ← Skill categories with levels
+│   │   ├── projects.ts                 ← Projects using STAR methodology
+│   │   ├── journey.ts                  ← Career timeline
+│   │   └── playground/                 ← (Phase 4) quiz questions, flip card data
+│   │       ├── quiz-js-basics.ts
+│   │       └── quiz-soft-skills.ts
+│   │
+│   ├── lib/
+│   │   └── utils.ts                    ← cn() and shared helpers
+│   │
+│   └── __tests__/                      ← Vitest + React Testing Library
 │
 ├── public/
-│   ├── CV_Rizky_Milan_2026.pdf     ← Downloadable resume
-│   ├── diagrams/                   ← SVG architecture diagrams
-│   │   ├── orion-flow.svg
-│   │   └── usphere-flow.svg
-│   └── og-image.png                ← Open Graph image for social sharing
+│   ├── CV_Rizky_Milan_2026.pdf
+│   ├── diagrams/
+│   └── og-image.png
 │
-├── lib/
-│   ├── content.ts                  ← Helper to load MDX/YAML content
-│   └── utils.ts
-│
-├── keystatic.config.ts             ← Keystatic CMS configuration
-└── next.config.js                  ← output: 'export' + other config
+├── next.config.ts
+└── package.json
 ```
 
 ---
 
 ## 6. Content Management Strategy
 
-- **Tool:** Keystatic CMS (local, file-based, UI-driven)
-- **Why:** Edit content via browser UI (`/keystatic` route), output stays as flat files (MDX/YAML) — fully compatible with SSG.
-- **Edit Workflow:** The `/keystatic` route is active in development only; disabled in production build.
-- **Content Types:**
+Content is managed directly as **typed TypeScript files** in `src/data/`. No external CMS or UI tool — edit in code, type-safe, zero runtime overhead.
 
-| Content | Format | Managed Via |
+| Content | File | How to Edit |
 |---|---|---|
-| Projects (STAR) | MDX | Keystatic |
-| Skills | YAML | Keystatic |
-| About Me | MDX | Keystatic |
-| Quiz Questions | YAML | Keystatic |
-| Flip Card Data | YAML | Keystatic |
+| Personal info (name, bio, links) | `src/data/personal.ts` | Edit directly |
+| Skills & levels | `src/data/skills.ts` | Edit directly |
+| Projects (STAR method) | `src/data/projects.ts` | Edit directly |
+| Career timeline | `src/data/journey.ts` | Edit directly |
+| Quiz questions (Phase 4) | `src/data/playground/quiz-*.ts` | Edit directly |
+| Flip card data (Phase 4) | `src/data/playground/flip-cards.ts` | Edit directly |
 
-**Example Quiz YAML:**
-```yaml
-# content/playground/quiz-js-basics.yaml
-title: "JavaScript Basics"
-difficulty: "easy"
-category: "tech"
-tags: ["javascript", "frontend"]
-questions:
-  - question: "What does `typeof null` return?"
-    options: ["null", "object", "undefined", "string"]
-    answer: 1
-    explanation: "Famous JS quirk — null is historically typed as object."
+**Project data shape** — preserves STAR methodology:
+```ts
+interface Project {
+  id: string
+  title: string
+  subtitle: string
+  situation: string
+  task: string
+  action: string[]
+  result: string[]
+  techStack: string[]
+  impact: { label: string; value: string }[]
+  featured: boolean
+}
 ```
 
 ---
@@ -239,9 +230,9 @@ const HeavyGame = dynamic(() => import('@/components/playground/HeavyGame'), {
 [Filter: All | Quiz | Game | Card]
 
 ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│  🧠 JS Quiz      │  │  🃏 Tech Terms   │  │  🎮 Coming Soon  │
-│  Easy · 10 Soal  │  │  Flip Card      │  │                 │
-│  [Play Now]     │  │  [Explore]      │  │                 │
+│  JS Quiz         │  │  Tech Terms      │  │  Coming Soon    │
+│  Easy · 10 Soal  │  │  Flip Card       │  │                 │
+│  [Play Now]      │  │  [Explore]       │  │                 │
 └─────────────────┘  └─────────────────┘  └─────────────────┘
 ```
 
@@ -251,17 +242,17 @@ const HeavyGame = dynamic(() => import('@/components/playground/HeavyGame'), {
 
 ### 8.5 Content Management (Playground)
 
-Quiz and card content is fully managed via Keystatic CMS — no code changes needed to add new questions or cards. Adding content = editing a YAML file via the CMS UI.
+Quiz and card content lives in `src/data/playground/` as typed TypeScript files. Adding new questions = adding an entry to the array.
 
 ---
 
 ## 9. SEO & Discoverability
 
-- **Meta tags:** Managed via Next.js `next/metadata` API per page
+- **Meta tags:** Managed via Next.js `next/metadata` API in `(portfolio)/layout.tsx`
 - **Open Graph:** `og:title`, `og:description`, `og:image` for LinkedIn/social sharing
 - **Sitemap:** Auto-generated `sitemap.xml`
-- **robots.txt:** Configured (allow all, disallow `/keystatic`)
-- **Structured Data:** JSON-LD `Person` schema on homepage
+- **robots.txt:** Configured (allow all)
+- **Structured Data:** JSON-LD `Person` schema injected in portfolio layout
 - **Font Loading:** `next/font` with `display: swap` to prevent render blocking
 
 ---
@@ -274,7 +265,7 @@ Quiz and card content is fully managed via Keystatic CMS — no code changes nee
 | Profile Photo | Professional headshot or monochrome portrait | WebP format, compressed |
 | Resume/CV | `CV_Rizky_Milan_2026.pdf` | Stored in `/public/`, linked from Hero CTA |
 | OG Image | Figma or Canva | 1200×630px, stored as `/public/og-image.png` |
-| Project Copywriting | Separate doc, STAR method | Based on 2025 Annual Work Summary & CV |
+| Project Copywriting | `src/data/projects.ts` | STAR method, based on 2025 Annual Work Summary & CV |
 
 ---
 
@@ -292,26 +283,44 @@ As an SRE, the site must be production-grade.
 | Bundle Size | Framer Motion lazy-loaded; Playground games use `next/dynamic` |
 | 404 Handling | Custom `not-found.tsx` page |
 | Theme Consistency | All color usage via CSS design tokens — verified in both Light and Dark mode |
+| Type Safety | `npm run type-check` must pass; data interfaces enforced via TypeScript |
 
 ---
 
 ## 12. Development Phases & Priority
 
-| Phase | Scope | Priority |
+| Phase | Scope | Status |
 |---|---|---|
-| **Phase 1** | Project scaffold, theme system, layout, Hero, About | High |
-| **Phase 2** | Skills, Projects (STAR), Contact, SEO, sitemap | High |
-| **Phase 3** | Keystatic CMS integration, content migration | Medium |
-| **Phase 4** | Playground gallery page + Quiz v1 + Flip Card v1 | Medium |
-| **Phase 5** | Drag & Drop game, additional quiz topics | Low |
-| **Phase 6** | Analytics, Lighthouse audit, a11y audit, cross-browser QA | High (pre-launch) |
+| **Phase 1** | Project scaffold, theme system, layout, Hero, About | ✅ Done |
+| **Phase 2** | Skills, Projects (STAR), Contact, SEO, sitemap | ✅ Done |
+| **Phase 3** | Content data cleanup, route group restructure, remove Keystatic | ✅ Done |
+| **Phase 4** | Playground page — single page, all client-side | ✅ Done  |
+| **Phase 5** | Analytics, Lighthouse audit, a11y audit, cross-browser QA | 🔲 Pre-launch |
+
+### Phase 4 Detail — Playground (`/playground`)
+
+**Approach:** Single page, all client-side React. No SSR, no dynamic imports needed — all games are lightweight.
+
+**Games to build:**
+
+| Game | Type | Data Source |
+|---|---|---|
+| Quiz (MCQ + timer + score) | Quiz | `src/data/playground/quiz.ts` |
+| Tech Term Flash Cards | Flip Card | `src/data/playground/flashcards.ts` |
+
+**Page structure:**
+- Filter bar: All / Quiz / Card
+- Game gallery grid — each card opens the game inline (no separate route needed)
+- Active game renders below or as an overlay/modal
+
+**No `next/dynamic` needed** — all components are light enough to bundle together.
 
 ---
 
 ## 13. Nice-to-Have (Future Scope)
 
 - **Leaderboard** on quiz games (via Cloudflare KV or D1 — serverless, aligns with SRE persona)
-- **Blog / TIL (Today I Learned)** section — MDX posts, managed via Keystatic
+- **Blog / TIL (Today I Learned)** section — MDX posts in `src/data/posts/`
 - **RSS Feed** for blog posts
 - **CLI Easter Egg** — hidden terminal-style command palette (`⌘K`) for fun
 - **i18n** — Bahasa Indonesia / English toggle (low priority)

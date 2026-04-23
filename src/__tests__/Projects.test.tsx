@@ -18,25 +18,25 @@ vi.mock('framer-motion', async () => {
 
 describe('Projects section', () => {
   it('renders the section heading', () => {
-    render(<Projects />)
+    render(<Projects projects={projects as any[]} />)
     expect(screen.getByRole('heading', { name: /selected work/i })).toBeInTheDocument()
   })
 
   it('renders all 3 featured projects', () => {
-    render(<Projects />)
+    render(<Projects projects={projects as any[]} />)
     const articles = screen.getAllByRole('article')
     expect(articles).toHaveLength(3)
   })
 
   it('renders each project title', () => {
-    render(<Projects />)
+    render(<Projects projects={projects as any[]} />)
     for (const project of projects) {
       expect(screen.getByText(project.title)).toBeInTheDocument()
     }
   })
 
   it('renders tech stack badges for each project', () => {
-    render(<Projects />)
+    render(<Projects projects={projects as any[]} />)
     // Check at least one tech from each project
     expect(screen.getAllByText('Prometheus').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('Go').length).toBeGreaterThanOrEqual(0) // "Go (Golang)" vs "Go"
@@ -44,7 +44,7 @@ describe('Projects section', () => {
   })
 
   it('STAR expand button toggles content', () => {
-    render(<Projects />)
+    render(<Projects projects={projects as any[]} />)
     const orionExpand = document.getElementById('project-expand-orion')!
     expect(orionExpand).toBeInTheDocument()
 
@@ -65,7 +65,7 @@ describe('Projects section', () => {
   })
 
   it('shows STAR sections when expanded', () => {
-    render(<Projects />)
+    render(<Projects projects={projects as any[]} />)
     const orionExpand = document.getElementById('project-expand-orion')!
     fireEvent.click(orionExpand)
 
@@ -77,7 +77,7 @@ describe('Projects section', () => {
   })
 
   it('renders impact metrics', () => {
-    render(<Projects />)
+    render(<Projects projects={projects as any[]} />)
     // ORION has "100%" as observability coverage
     expect(screen.getAllByText('100%').length).toBeGreaterThanOrEqual(1)
   })

@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/keystatic', '/keystatic/'],
+      disallow: [],
     },
     sitemap: 'https://rizkymilan.dev/sitemap.xml',
   }

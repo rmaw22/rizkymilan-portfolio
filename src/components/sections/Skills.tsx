@@ -2,8 +2,8 @@
 
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { Badge } from '@/components/ui/Badge'
-import { skillCategories, type SkillLevel } from '@/data/skills'
+import { GlowCard } from '@/components/ui/spotlight-card'
+import type { SkillLevel } from '@/data/skills'
 
 const levelLabel: Record<SkillLevel, string> = {
   expert: 'Expert',
@@ -53,15 +53,18 @@ const CategoryIcons: Record<string, React.FC<{ size?: number }>> = {
   ),
 }
 
-export function Skills() {
+export function Skills({ skillCategories }: { skillCategories: any[] }) {
   return (
     <section
       id="skills"
       aria-label="Skills and competencies"
-      className="py-24 px-6"
-      style={{ background: 'var(--bg-primary)' }}
+      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
     >
-      <div className="max-w-6xl mx-auto">
+      <div 
+        className="w-full py-16 md:py-24 px-6 md:px-12 rounded-[2.5rem] overflow-hidden border"
+        style={{ background: 'var(--bg-primary)', borderColor: 'var(--border)' }}
+      >
+        <div className="w-full max-w-6xl mx-auto">
         <AnimatedSection>
           <SectionHeading
             label="Core Competencies"
@@ -70,17 +73,16 @@ export function Skills() {
           />
         </AnimatedSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 mt-20 pb-16">
           {skillCategories.map((category, catIndex) => {
             const Icon = CategoryIcons[category.id]
+            const colors = ['blue', 'purple', 'green'] as const
             return (
-              <AnimatedSection key={category.id} delay={catIndex * 0.1}>
-                <article
-                  className="rounded-2xl border p-6 h-full flex flex-col gap-5 transition-all duration-300 hover:shadow-lg"
-                  style={{
-                    background: 'var(--bg-card)',
-                    borderColor: 'var(--border)',
-                  }}
+              <AnimatedSection key={category.id} delay={catIndex * 0.15} className="h-full">
+                <GlowCard
+                  customSize
+                  glowColor={colors[catIndex % colors.length]}
+                  className="p-8 h-full min-h-[320px] transition-all duration-300 hover:shadow-2xl z-10"
                   aria-label={`${category.label} skills`}
                 >
                   {/* Category header */}
@@ -109,13 +111,13 @@ export function Skills() {
 
                   {/* Skills list */}
                   <ul className="flex flex-wrap gap-2 list-none" role="list" aria-label={`${category.label} technologies`}>
-                    {category.skills.map((skill) => {
-                      const style = levelStyle[skill.level]
+                    {category.skills.map((skill: any) => {
+                      const style = levelStyle[skill.level as SkillLevel]
                       return (
                         <li key={skill.name}>
                           <span
                             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-medium border cursor-default transition-all duration-200 hover:shadow-sm"
-                            title={`${skill.name} — ${levelLabel[skill.level]}`}
+                            title={`${skill.name} — ${levelLabel[skill.level as SkillLevel]}`}
                             style={{
                               borderColor: style.border,
                               background: style.bg,
@@ -138,7 +140,7 @@ export function Skills() {
                   {/* Legend */}
                   <div className="flex items-center gap-4 mt-auto pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
                     {(['expert', 'proficient', 'familiar'] as SkillLevel[]).map((level) => (
-                      <span key={level} className="flex items-center gap-1 text-xs" style={{ color: 'var(--text-muted)' }}>
+                      <span key={level} className="flex items-center gap-1 text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
                         <span
                           className="w-2 h-2 rounded-full"
                           aria-hidden="true"
@@ -148,10 +150,11 @@ export function Skills() {
                       </span>
                     ))}
                   </div>
-                </article>
+                </GlowCard>
               </AnimatedSection>
             )
           })}
+        </div>
         </div>
       </div>
     </section>

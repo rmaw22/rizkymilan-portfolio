@@ -1,30 +1,41 @@
 'use client'
 
-import { GitBranch, Link2, Mail } from 'lucide-react'
-import { personal } from '@/data/personal'
+import { GitBranch, Link2, Mail, X, User } from 'lucide-react'
 
-const socialLinks = [
-  {
-    href: personal.github,
-    label: 'GitHub',
-    icon: GitBranch,
-    id: 'footer-github',
-  },
-  {
-    href: personal.linkedin,
-    label: 'LinkedIn',
-    icon: Link2,
-    id: 'footer-linkedin',
-  },
-  {
-    href: `mailto:${personal.email}`,
-    label: 'Email',
-    icon: Mail,
-    id: 'footer-email',
-  },
-]
+export function Footer({ personal }: { personal: any }) {
+  const socialLinks = [
+    {
+      href: personal.github,
+      label: 'GitHub',
+      icon: GitBranch,
+      id: 'footer-github',
+    },
+    {
+      href: personal.linkedin,
+      label: 'LinkedIn',
+      icon: Link2,
+      id: 'footer-linkedin',
+    },
+    {
+      href: `mailto:${personal.email}`,
+      label: 'Email',
+      icon: Mail,
+      id: 'footer-email',
+    },
+    {
+      href: personal.x,
+      label: 'X',
+      icon: X,
+      id: 'footer-x',
+    },
+    {
+      href: personal.thread,
+      label: 'Threads',
+      icon: User,
+      id: 'footer-threads',
+    },
+  ]
 
-export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
@@ -40,7 +51,7 @@ export function Footer() {
             className="font-mono text-sm font-semibold"
             style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
           >
-            <span style={{ color: 'var(--accent)' }}>~</span>
+            <span style={{ color: 'var(--accent)' }}>~/</span>
             {personal.shortName.toLowerCase().replace(' ', '.')}
           </p>
           <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>

@@ -8,6 +8,7 @@ interface AnimatedSectionProps {
   className?: string
   delay?: number
   direction?: 'up' | 'left' | 'none'
+  style?: React.CSSProperties
 }
 
 const variants: Variants = {
@@ -32,6 +33,7 @@ export function AnimatedSection({
   className = '',
   delay = 0,
   direction = 'up',
+  style,
 }: AnimatedSectionProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
@@ -44,7 +46,8 @@ export function AnimatedSection({
       custom={direction}
       initial="hidden"
       animate={isInView ? 'visible' : 'hidden'}
-      transition={{ delay }}
+      transition={{ delay, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+      style={style}
     >
       {children}
     </motion.div>
