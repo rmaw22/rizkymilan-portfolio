@@ -1,5 +1,13 @@
+import type { Metadata } from 'next'
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
+
+export const metadata: Metadata = {
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+  },
+}
 
 const inter = Inter({
   subsets: ['latin'],
