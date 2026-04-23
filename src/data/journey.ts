@@ -9,57 +9,30 @@ export interface JourneyItem {
 
 export const journey: JourneyItem[] = [
   {
-    year: '2019',
-    period: '2019',
-    role: 'Freelance Full-Stack Developer',
-    company: 'JASAMITRA & CV. MAS',
+    year: '2017',
+    period: 'Aug 2017 - Oct 2017',
+    role: 'Web Developer & Network Technician (Intern)',
+    company: 'PT. INTENS',
     description:
-      'Started coding professionally with native PHP and MySQL. Built a service marketplace (JASAMITRA) and a barcode-based parking management system.',
-    highlight: 'PHP, MySQL, Web Development',
-  },
-  {
-    year: '2020',
-    period: '2020',
-    role: 'Full-Stack Developer',
-    company: 'Educational Institutions',
-    description:
-      'Delivered web-based exam and information systems for schools using CodeIgniter 3 and Joomla CMS. First experience with multi-user production systems under real institutional constraints.',
-    highlight: 'CodeIgniter, Joomla, Institutional Software',
+      'Built and maintained computer networks and developed web applications according to user needs. Developed a simple Android application as part of an internship program.',
+    highlight: 'Web Development, Networking, Android',
   },
   {
     year: '2021',
-    period: '2021',
-    role: 'Full-Stack Developer',
-    company: 'CV. SONA JAYA & PT. Kafilah Teknologi',
+    period: 'Jul 2021 - Jul 2022',
+    role: 'Junior Software Engineer',
+    company: "PT Kafilah Teknologi Indonesia x Reacteev's",
     description:
-      'Worked on diverse products: an educational robotics IDE (NodeJS + React + Python), an exclusive Muslim fashion marketplace, and a courier app with mobile (Flutter + Vue + Laravel).',
-    highlight: 'React, Node.js, Laravel, Flutter, Vue',
-  },
-  {
-    year: '2022',
-    period: '2022',
-    role: 'Backend Developer',
-    company: "Reacteev's",
-    description:
-      "Built multimedia studio marketplace systems with Laravel and WordPress. Won Jabar Coding Camp building a sports venue REST API with Node.js (Adonis.js).",
-    highlight: 'Laravel, WordPress, Adonis.js',
+      'Collaborated to develop web-based applications using modern technologies. Contributed to both frontend and backend development, ensuring optimal application performance, and conducted debugging and automated testing.',
+    highlight: 'Full-stack Development, Automated Testing',
   },
   {
     year: '2023',
-    period: '2023',
-    role: 'Full-Stack Developer (S1 Final Project)',
-    company: 'PT. MAS 57',
+    period: 'Oct 2023 - Present',
+    role: 'Software Engineer',
+    company: 'Ukirama',
     description:
-      'Final year thesis: Security Monitoring and Field Control Application. Multi-platform system using Golang web service, React JS frontend, and Jetpack Compose mobile app.',
-    highlight: 'Go, React, Jetpack Compose',
-  },
-  {
-    year: '2024',
-    period: '2024 – Present',
-    role: 'Backend Engineer & SRE',
-    company: 'Ukirama (PT. Ukirama Inteknologi)',
-    description:
-      'Joined as backend engineer on Ukirama ERP (Ruby on Rails + Go). Evolved into hybrid SRE role: building ORION monitoring platform, USphere trial manager, and maintaining all client production infrastructure.',
-    highlight: 'Ruby on Rails, Go, Prometheus, Grafana, Docker',
+      'Developed features for Ukirama ERP (Ruby on Rails, PostgreSQL, GCP). Built Go microservices for heavy processing, led Next.js frontend modernization, and acted as an SRE managing cloud servers and deployment automation.',
+    highlight: 'Ruby on Rails, Go, Next.js, GCP, SRE',
   },
 ]

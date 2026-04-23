@@ -21,9 +21,72 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'ukirama-erp',
+    title: 'Ukirama ERP',
+    subtitle: 'Core Platform & Architecture',
+    description:
+      'Enterprise resource planning system designed to streamline business processes. Led multiple high-impact technical initiatives across infrastructure, backend, and frontend.',
+    period: '2024 – Present',
+    situation:
+      'The legacy ERP required modernization to handle scale, including rewriting critical bottlenecks and decoupling tightly coupled monoliths.',
+    task:
+      'Enhance system performance, build Go microservices to replace heavy operations, and lead frontend migration while maintaining reliable deployments.',
+    action: [
+      'Transformed a critical ERP library into a high-performance Golang microservice, significantly improving scalability',
+      'Led the frontend migration from legacy ERB and AngularJS to Next.js',
+      'Prototyped new experimental features using modern stacks to evaluate production feasibility',
+      'Identified and resolved complex bugs in existing ERP modules',
+      'Supported deployment and operations in DigitalOcean environments'
+    ],
+    result: [
+      'Improved response time and system capability with high-performance Go microservices',
+      'Established reusable Next.js migration architecture for internal teams',
+      'Ensured stable ongoing client production environments via targeted bug fixes and deployment support'
+    ],
+    techStack: ['Ruby on Rails', 'Go', 'Next.js', 'PostgreSQL', 'DigitalOcean', 'Redis'],
+    impact: [
+      { label: 'Role', value: 'Full Stack' },
+      { label: 'Architecture', value: 'Monolith' },
+      { label: 'Platform', value: 'DigitalOcean' },
+      { label: 'Status', value: 'Ongoing' },
+    ],
+    featured: true,
+  },
+  {
+    id: 'ukirama-website',
+    title: 'Ukirama Website',
+    subtitle: 'Corporate Profile Rewrite',
+    description:
+      'Migration of the official corporate website from a legacy monolithic stack to a modern, serverless SSG architecture.',
+    period: '2024 – Present',
+    situation:
+      'The company\'s main digital presence was running on older rails infrastructure that was becoming harder to maintain and overkill for a content-focused landing site.',
+    task:
+      'Rebuilt the entire website from the ground up using Astro, implement robust design systems, and set up modern serverless deployment.',
+    action: [
+      'Migrated the Ukirama website from Ruby on Rails 6 to Astro.js',
+      'Implemented complete design system and responsive UI architecture',
+      'Configured serverless deployment pipeline using Cloudflare infrastructure',
+      'Managed ongoing maintenance, optimizing performance and web security protocols'
+    ],
+    result: [
+      'Modern, lightning-fast statically generated website',
+      'Reduced deployment complexity and hosting costs via serverless platform',
+      'Simplified future content addition with isolated asset management'
+    ],
+    techStack: ['Astro.js', 'Cloudflare', 'TypeScript', 'Tailwind', 'HTML/CSS'],
+    impact: [
+      { label: 'Framework', value: 'Astro.js' },
+      { label: 'Hosting', value: 'Cloudflare' },
+      { label: 'Perf', value: 'Optimal' },
+      { label: 'Status', value: 'Live' },
+    ],
+    featured: true,
+  },
+  {
     id: 'orion',
-    title: 'ORION',
-    subtitle: 'SRE Monitoring Platform',
+    title: 'Monitoring Platform',
+    subtitle: 'SRE Monitoring Platform with alerting and dashboard',
     description:
       'Centralized observability platform giving the engineering team real-time visibility into server health, application performance, and business operations across all client environments.',
     period: 'Sep 2025 – Dec 2025',
@@ -56,8 +119,8 @@ export const projects: Project[] = [
   },
   {
     id: 'usphere',
-    title: 'USphere',
-    subtitle: 'Server Trial Manager',
+    title: 'Trial Server Manager',
+    subtitle: 'Internal Platform for Trial Server Management',
     description:
       'Automated trial server provisioning and management system that accelerated the sales cycle for Ukirama ERP by allowing prospects to get a live trial environment on demand.',
     period: 'Nov 2025 – Dec 2025',
@@ -84,40 +147,6 @@ export const projects: Project[] = [
       { label: 'Manual Steps', value: '0' },
       { label: 'Language', value: 'Go' },
       { label: 'Integration', value: 'DO API' },
-    ],
-    featured: true,
-  },
-  {
-    id: 'ukirama-erp-nextjs',
-    title: 'Ukirama ERP Frontend',
-    subtitle: 'Rails Monolith → Next.js Migration',
-    description:
-      'Modernization of a legacy Rails monolith ERP frontend to a Next.js-powered architecture, improving developer experience, page performance, and enabling a modern component-based workflow.',
-    period: 'Jun 2025 – Sep 2025',
-    situation:
-      'Ukirama ERP\'s frontend was tightly coupled to a Ruby on Rails monolith using AngularJS — difficult to maintain, slow to iterate, and challenging to test. New feature development required navigating a complex legacy codebase.',
-    task:
-      'Lead the technical planning, architecture design, and implementation of extracting the frontend from the Rails monolith into a Next.js application, starting with the Recurring Journal Entry module.',
-    action: [
-      'Designed system architecture for Ukirama Middleware to decouple frontend from Rails backend',
-      'Implemented Next.js on ERP v1.0.0 (Jun–Jul 2025) and v2.0.0 with Recurring Journal Entry',
-      'Integrated OpenReplay for session replay and UX monitoring on DigitalOcean',
-      'Built and documented REST API backend for the Next.js frontend to consume',
-      'Conducted handover and knowledge transfer to the frontend team (Sep 2025)',
-      'Deployed and validated in production with zero downtime',
-    ],
-    result: [
-      'Modern component-based frontend architecture replacing AngularJS legacy code',
-      'Developer onboarding time reduced with clear API documentation',
-      'Session replay enabled for UX debugging and customer support investigation',
-      'Established migration pattern for future ERP modules',
-    ],
-    techStack: ['Next.js', 'TypeScript', 'Ruby on Rails', 'PostgreSQL', 'OpenReplay', 'REST API', 'DigitalOcean'],
-    impact: [
-      { label: 'Architecture', value: 'Decoupled' },
-      { label: 'Pattern', value: 'Reusable' },
-      { label: 'Monitoring', value: 'Session Replay' },
-      { label: 'Downtime', value: '0' },
     ],
     featured: true,
   },

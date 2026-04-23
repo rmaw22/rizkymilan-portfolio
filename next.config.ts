@@ -2,12 +2,12 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   output: 'export',
-  trailingSlash: true,
+  trailingSlash: false,
   images: {
-    unoptimized: true, // Required for static export
+    unoptimized: true,
   },
   eslint: {
-    ignoreDuringBuilds: true, // Run 'npm run lint' separately; FlatCompat causes circular JSON during build
+    ignoreDuringBuilds: true,
   },
 }
 

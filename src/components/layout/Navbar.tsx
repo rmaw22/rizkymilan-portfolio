@@ -1,19 +1,27 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { ThemeToggle } from './ThemeToggle'
-import { personal } from '@/data/personal'
 
 const navLinks = [
   { href: '#about', label: 'About' },
   { href: '#skills', label: 'Skills' },
   { href: '#projects', label: 'Projects' },
   { href: '#contact', label: 'Contact' },
+  { href: '/playground', label: 'Playground' },
 ]
 
-export function Navbar() {
+export function Navbar({ personal }: { personal: any }) {
+  const pathname = usePathname()
+  const isPlayground = pathname === '/playground'
+
+  // Prefix anchor-only hrefs with '/' when not on the home page
+  const resolveHref = (href: string) =>
+    href.startsWith('#') && isPlayground ? `/${href}` : href
+
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
@@ -52,12 +60,12 @@ export function Navbar() {
         >
           {/* Logo / Name */}
           <a
-            href="#"
+            href={isPlayground ? '/' : '#'}
             aria-label="Back to top"
             className="font-mono text-sm font-semibold tracking-tight cursor-pointer transition-colors duration-200 hover:opacity-70"
             style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
           >
-            <span style={{ color: 'var(--accent)' }}>~</span>
+            <span style={{ color: 'var(--accent)' }}>~/</span>
             {personal.shortName.toLowerCase().replace(' ', '.')}
           </a>
 
@@ -66,7 +74,7 @@ export function Navbar() {
             {navLinks.map((link) => (
               <li key={link.href}>
                 <a
-                  href={link.href}
+                  href={resolveHref(link.href)}
                   className="px-3 py-1.5 text-sm rounded-lg cursor-pointer transition-colors duration-200 hover:bg-[var(--bg-secondary)]"
                   style={{ color: 'var(--text-secondary)' }}
                 >
@@ -140,7 +148,7 @@ export function Navbar() {
                 {navLinks.map((link) => (
                   <li key={link.href}>
                     <a
-                      href={link.href}
+                      href={resolveHref(link.href)}
                       onClick={closeMobile}
                       className="flex px-5 py-3 text-sm cursor-pointer transition-colors duration-200 hover:bg-[var(--bg-secondary)]"
                       style={{ color: 'var(--text-primary)' }}

@@ -22,13 +22,13 @@ vi.mock('framer-motion', async () => {
 
 describe('Navbar', () => {
   it('renders the navigation element', () => {
-    render(<Navbar />)
+    render(<Navbar personal={{ shortName: 'RM', name: 'R', role: 'SE' }} />)
     expect(screen.getByRole('banner')).toBeInTheDocument()
     expect(screen.getByRole('navigation')).toBeInTheDocument()
   })
 
   it('renders all navigation links', () => {
-    render(<Navbar />)
+    render(<Navbar personal={{ shortName: 'RM', name: 'R', role: 'SE' }} />)
     // Desktop links (may have duplicates in mobile — get all)
     const aboutLinks = screen.getAllByRole('link', { name: /about/i })
     expect(aboutLinks.length).toBeGreaterThanOrEqual(1)
@@ -44,19 +44,19 @@ describe('Navbar', () => {
   })
 
   it('renders the resume button', () => {
-    render(<Navbar />)
+    render(<Navbar personal={{ shortName: 'RM', name: 'R', role: 'SE' }} />)
     const resumeBtn = screen.getByRole('link', { name: /download resume/i })
     expect(resumeBtn).toHaveAttribute('href', '/CV_Rizky_Milan_2026.pdf')
   })
 
   it('renders mobile menu toggle button', () => {
-    render(<Navbar />)
+    render(<Navbar personal={{ shortName: 'RM', name: 'R', role: 'SE' }} />)
     const toggleBtn = document.getElementById('mobile-menu-toggle')
     expect(toggleBtn).toBeInTheDocument()
   })
 
   it('toggles mobile menu on click', () => {
-    render(<Navbar />)
+    render(<Navbar personal={{ shortName: 'RM', name: 'R', role: 'SE' }} />)
     const toggleBtn = document.getElementById('mobile-menu-toggle')!
     expect(toggleBtn.getAttribute('aria-expanded')).toBe('false')
     fireEvent.click(toggleBtn)
@@ -66,7 +66,7 @@ describe('Navbar', () => {
   })
 
   it('has correct nav link hrefs', () => {
-    render(<Navbar />)
+    render(<Navbar personal={{ shortName: 'RM', name: 'R', role: 'SE' }} />)
     const links = screen.getAllByRole('link').filter(
       (el) => el.getAttribute('href')?.startsWith('#')
     )
