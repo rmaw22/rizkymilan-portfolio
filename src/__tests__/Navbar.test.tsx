@@ -43,10 +43,10 @@ describe('Navbar', () => {
     expect(contactLinks.length).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders the resume button', () => {
-    render(<Navbar personal={{ shortName: 'RM', name: 'R', role: 'SE' }} />)
-    const resumeBtn = screen.getByRole('link', { name: /download resume/i })
-    expect(resumeBtn).toHaveAttribute('href', '/CV_Rizky_Milan_2026.pdf')
+  it('renders the request-CV link', () => {
+    render(<Navbar personal={{ shortName: 'RM', name: 'R', role: 'SE', resumeUrl: 'mailto:me@example.com' }} />)
+    const resumeBtn = screen.getByRole('link', { name: /request cv/i })
+    expect(resumeBtn).toHaveAttribute('href', 'mailto:me@example.com')
   })
 
   it('renders mobile menu toggle button', () => {

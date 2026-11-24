@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { cn } from '@/lib/utils'
+import { Brain, Layers, Search, SearchX } from 'lucide-react'
 import { quizzes } from '@/data/playground/quiz'
 import { flashcardDecks } from '@/data/playground/flashcards'
 import { QuizGame } from '@/components/playground/QuizGame'
@@ -25,9 +25,9 @@ const sortOptions: { value: SortType; label: string }[] = [
 ]
 
 const difficultyColor: Record<string, string> = {
-  easy: '#22c55e',
-  medium: '#f59e0b',
-  hard: '#f87171',
+  easy: 'var(--terminal)',
+  medium: 'var(--text-muted)',
+  hard: 'var(--danger)',
 }
 
 const difficultyLabel: Record<string, string> = {
@@ -36,28 +36,25 @@ const difficultyLabel: Record<string, string> = {
   hard: 'Hard',
 }
 
-// Category accent colors (top border + icon bg + badge)
-const categoryStyle: Record<string, { border: string; iconBg: string; iconColor: string; badgeBg: string; badgeText: string }> = {
+// Per-kind accent, built from theme tokens so both themes stay in sync
+const categoryStyle = {
   quiz: {
-    border: 'var(--accent)',
-    iconBg: 'var(--accent-subtle)',
-    iconColor: 'var(--accent)',
-    badgeBg: 'var(--accent-subtle)',
-    badgeText: 'var(--accent)',
+    color: 'var(--accent)',
+    tint: 'var(--accent-subtle)',
+    label: 'Quiz',
+    icon: Brain,
   },
   card: {
-    border: '#a855f7',
-    iconBg: '#f5f3ff',
-    iconColor: '#7c3aed',
-    badgeBg: '#f5f3ff',
-    badgeText: '#7c3aed',
+    color: 'var(--terminal)',
+    tint: 'color-mix(in srgb, var(--terminal) 12%, transparent)',
+    label: 'Flash Cards',
+    icon: Layers,
   },
-}
+} as const
 
 export default function PlaygroundPage() {
   const [filter, setFilter] = useState<FilterType>('all')
   const [sort, setSort]     = useState<SortType>('title-asc')
-  const [sortOpen, setSortOpen] = useState(false)
   const [active, setActive] = useState<ActiveGame>(null)
   const [search, setSearch] = useState('')
 
@@ -103,14 +100,14 @@ export default function PlaygroundPage() {
   })
 
   return (
-    <div className="min-h-screen pt-24 pb-20 px-6 md:px-12 max-w-7xl mx-auto">
+    <div className="min-h-screen pt-28 pb-20 px-6 lg:px-8 max-w-6xl mx-auto">
 
       {/* ── Header + Search ── */}
-      <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
         <div>
           <h1
             className="text-3xl font-bold mb-1"
-            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}
+            style={{ color: 'var(--text-primary)' }}
           >
             Playground
           </h1>
@@ -119,92 +116,41 @@ export default function PlaygroundPage() {
           </p>
         </div>
 
-        <div className="flex gap-2 w-full md:w-auto">
-          {/* Search input */}
+        <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
           <div className="relative flex-grow md:w-64">
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
-              style={{ color: 'var(--text-muted)' }}
-              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-            </svg>
+            <Search
+              size={16}
+              aria-hidden="true"
+              className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-muted)]"
+            />
             <input
-              type="text"
-              placeholder="Find an activity…"
+              type="search"
+              aria-label="Search activities"
+              placeholder="Search activities"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 rounded-lg text-sm outline-none transition-all duration-150"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border)',
-                color: 'var(--text-primary)',
-              }}
-              onFocus={e => (e.target.style.borderColor = 'var(--accent)')}
-              onBlur={e => (e.target.style.borderColor = 'var(--border)')}
+              className="w-full h-11 pl-9 pr-3 rounded-lg text-base border border-[var(--border-strong)] bg-[var(--bg-card)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)]"
             />
           </div>
 
-          {/* Sort button + dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setSortOpen(o => !o)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
-              style={{
-                background: sortOpen ? 'var(--bg-secondary)' : 'var(--bg-card)',
-                border: '1px solid var(--border)',
-                color: 'var(--text-secondary)',
-              }}
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 8h10M11 12h6M15 16h2" />
-              </svg>
-              <span className="hidden sm:inline">Sort</span>
-            </button>
-
-            <AnimatePresence>
-              {sortOpen && (
-                <>
-                  {/* backdrop to close */}
-                  <div className="fixed inset-0 z-10" onClick={() => setSortOpen(false)} />
-                  <motion.div
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-1 w-52 rounded-xl overflow-hidden z-20"
-                    style={{
-                      background: 'var(--bg-card)',
-                      border: '1px solid var(--border)',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.10)',
-                    }}
-                  >
-                    {sortOptions.map(opt => (
-                      <button
-                        key={opt.value}
-                        onClick={() => { setSort(opt.value); setSortOpen(false) }}
-                        className="w-full text-left px-4 py-2.5 text-sm transition-colors duration-100"
-                        style={{
-                          background: sort === opt.value ? 'var(--accent-subtle)' : 'transparent',
-                          color: sort === opt.value ? 'var(--accent)' : 'var(--text-primary)',
-                          fontWeight: sort === opt.value ? 600 : 400,
-                        }}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </motion.div>
-                </>
-              )}
-            </AnimatePresence>
-          </div>
+          <select
+            aria-label="Sort activities"
+            value={sort}
+            onChange={e => setSort(e.target.value as SortType)}
+            className="h-11 px-3 rounded-lg text-sm font-medium border border-[var(--border-strong)] bg-[var(--bg-card)] text-[var(--text-primary)]"
+          >
+            {sortOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
         </div>
-      </section>
+      </div>
 
       {/* ── Filter Tabs ── */}
-      <section
-        className="flex gap-1 overflow-x-auto pb-0 mb-8"
-        style={{ borderBottom: '1px solid var(--border)' }}
+      <div
+        role="group"
+        aria-label="Filter by type"
+        className="flex gap-1 overflow-x-auto mb-8 border-b border-[var(--border)]"
       >
         {filters.map(f => {
           const isActive = filter === f.value
@@ -212,19 +158,19 @@ export default function PlaygroundPage() {
             <button
               key={f.value}
               onClick={() => { setFilter(f.value); setActive(null) }}
-              className="px-4 py-2.5 text-sm font-semibold whitespace-nowrap transition-all duration-150"
+              aria-pressed={isActive}
+              className="px-4 py-3 text-sm font-semibold whitespace-nowrap cursor-pointer transition-colors duration-150"
               style={{
-                color: isActive ? 'var(--text-primary)' : 'var(--text-muted)',
-                borderBottom: isActive ? '2px solid var(--text-primary)' : '2px solid transparent',
+                color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
+                borderBottom: isActive ? '2px solid var(--accent)' : '2px solid transparent',
                 marginBottom: '-1px',
-                background: 'transparent',
               }}
             >
               {f.label}
             </button>
           )
         })}
-      </section>
+      </div>
 
       {/* ── Card Grid ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -238,15 +184,14 @@ export default function PlaygroundPage() {
             const quiz = kind === 'quiz' ? (data as typeof quizzes[number]) : null
             const deck = kind === 'card' ? (data as typeof flashcardDecks[number]) : null
 
-            const badgeLabel = kind === 'quiz' ? 'Quiz' : 'Flash Cards'
-            const icon = kind === 'quiz' ? '🧠' : '🃏'
+            const Icon = style.icon
             const metaRight =
               kind === 'quiz' && quiz
                 ? `${quiz.questions.length} Questions`
                 : deck
                 ? `${deck.cards.length} Cards`
                 : ''
-            const difficultyKey = quiz?.difficulty ?? 'easy'
+            const panelId = `activity-panel-${kind}-${data.id}`
 
             return (
               <motion.div
@@ -256,86 +201,55 @@ export default function PlaygroundPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 12 }}
                 transition={{ duration: 0.2 }}
-                className="rounded-xl overflow-hidden flex flex-col cursor-pointer group self-start"
-                style={{
-                  background: 'var(--bg-card)',
-                  borderTop: `4px solid ${style.border}`,
-                  borderRight: `1px solid ${isActive ? style.border : 'var(--border)'}`,
-                  borderBottom: `1px solid ${isActive ? style.border : 'var(--border)'}`,
-                  borderLeft: `1px solid ${isActive ? style.border : 'var(--border)'}`,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                  transition: 'box-shadow 0.15s ease, transform 0.15s ease',
-                }}
-                onMouseEnter={e => {
-                  ;(e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'
-                  ;(e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'
-                }}
-                onMouseLeave={e => {
-                  ;(e.currentTarget as HTMLElement).style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)'
-                  ;(e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
-                }}
+                className="rounded-2xl overflow-hidden flex flex-col group self-start border bg-[var(--bg-card)]"
+                style={{ borderColor: isActive ? style.color : 'var(--border)' }}
               >
                 {/* Card body — clickable */}
                 <button
-                  className="w-full text-left flex flex-col gap-3 p-5"
-                  onClick={() => {
-                    if (kind === 'quiz') {
-                      setActive(isActive ? null : { type: 'quiz', id: data.id })
-                    } else {
-                      setActive(isActive ? null : { type: 'card', id: data.id })
-                    }
-                  }}
+                  className="w-full text-left flex flex-col gap-3 p-5 cursor-pointer"
+                  aria-expanded={isActive}
+                  aria-controls={panelId}
+                  onClick={() => setActive(isActive ? null : { type: kind, id: data.id })}
                 >
-                  {/* Icon row + badge */}
                   <div className="flex justify-between items-start">
                     <div
-                      className="w-11 h-11 rounded-full flex items-center justify-center text-xl transition-transform duration-150 group-hover:scale-110"
-                      style={{ background: style.iconBg }}
+                      className="w-11 h-11 rounded-xl flex items-center justify-center"
+                      style={{ background: style.tint, color: style.color }}
                     >
-                      {icon}
+                      <Icon size={20} aria-hidden="true" />
                     </div>
                     <span
-                      className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                      style={{ background: style.badgeBg, color: style.badgeText }}
+                      className="text-xs font-semibold px-2.5 py-1 rounded-md"
+                      style={{ background: style.tint, color: style.color }}
                     >
-                      {badgeLabel}
+                      {style.label}
                     </span>
                   </div>
 
-                  {/* Title + description */}
                   <div>
-                    <h3
-                      className="font-bold text-base mb-1 transition-colors duration-150 group-hover:text-[var(--accent)]"
-                      style={{ color: 'var(--text-primary)' }}
-                    >
+                    <h2 className="font-bold text-base mb-1 text-[var(--text-primary)] transition-colors duration-150 group-hover:text-[var(--accent)]">
                       {data.title}
-                    </h3>
-                    <p
-                      className="text-sm line-clamp-2"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
+                    </h2>
+                    <p className="text-sm line-clamp-2 text-[var(--text-secondary)]">
                       {data.description}
                     </p>
                   </div>
 
-                  {/* Footer meta */}
-                  <div
-                    className="flex justify-between items-center text-xs pt-3 mt-auto"
-                    style={{ borderTop: '1px solid var(--border)', color: 'var(--text-muted)' }}
-                  >
-                    {/* Difficulty dot */}
-                    <span className="flex items-center gap-1.5">
-                      <span
-                        className="w-2 h-2 rounded-full inline-block"
-                        style={{ background: difficultyColor[difficultyKey] }}
-                      />
-                      {difficultyLabel[difficultyKey]}
-                    </span>
-
-                    {/* Right meta */}
-                    <span className="flex items-center gap-1">
-                      {metaRight}
-                    </span>
+                  <div className="flex justify-between items-center text-xs pt-3 mt-auto border-t border-[var(--border)] text-[var(--text-muted)]">
+                    {/* Only quizzes carry a difficulty */}
+                    {quiz ? (
+                      <span className="flex items-center gap-1.5">
+                        <span
+                          className="w-2 h-2 rounded-full inline-block"
+                          aria-hidden="true"
+                          style={{ background: difficultyColor[quiz.difficulty] }}
+                        />
+                        {difficultyLabel[quiz.difficulty]}
+                      </span>
+                    ) : (
+                      <span>Self-paced</span>
+                    )}
+                    <span>{metaRight}</span>
                   </div>
                 </button>
 
@@ -343,16 +257,14 @@ export default function PlaygroundPage() {
                 <AnimatePresence>
                   {isActive && (
                     <motion.div
+                      id={panelId}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25 }}
                       className="overflow-hidden"
                     >
-                      <div
-                        className="px-5 pb-6 pt-3"
-                        style={{ borderTop: '1px solid var(--border)' }}
-                      >
+                      <div className="px-5 pb-6 pt-4 border-t border-[var(--border)]">
                         {kind === 'quiz' && activeQuiz && (
                           <QuizGame quiz={activeQuiz} onClose={close} />
                         )}
@@ -370,10 +282,19 @@ export default function PlaygroundPage() {
 
         {/* Empty state */}
         {cards.length === 0 && (
-          <div className="col-span-full py-16 text-center" style={{ color: 'var(--text-muted)' }}>
-            <div className="text-4xl mb-3">🔍</div>
-            <p className="font-medium">No activities found</p>
-            <p className="text-sm mt-1">Try a different search or filter</p>
+          <div className="col-span-full py-16 flex flex-col items-center text-center" role="status">
+            <SearchX size={32} aria-hidden="true" className="mb-3 text-[var(--text-muted)]" />
+            <p className="font-medium text-[var(--text-primary)]">
+              {search ? `No activities match “${search}”` : 'No activities here yet'}
+            </p>
+            {(search || filter !== 'all') && (
+              <button
+                onClick={() => { setSearch(''); setFilter('all') }}
+                className="mt-4 px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer border border-[var(--border-strong)] text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
+              >
+                Clear search and filters
+              </button>
+            )}
           </div>
         )}
       </div>

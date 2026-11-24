@@ -2,28 +2,19 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
+import { ChevronDown, Lock } from 'lucide-react'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { GlowCard } from '@/components/ui/spotlight-card'
+import { Section } from '@/components/ui/Section'
+import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import type { Project } from '@/data/projects'
 
 function ImpactMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div
-      className="flex flex-col items-center justify-center p-2 rounded-xl border text-center min-w-0 h-full overflow-hidden"
-      style={{ background: 'var(--bg-secondary)', borderColor: 'var(--border)' }}
-    >
-      <span
-        className="text-[11px] sm:text-xs xl:text-[13px] font-bold font-mono leading-tight break-words w-full"
-        style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
-      >
-        {value}
-      </span>
-      <span className="text-[9px] sm:text-[10px] mt-1 leading-tight text-balance break-words opacity-80" style={{ color: 'var(--text-muted)' }}>
-        {label}
-      </span>
+    <div className="min-w-0 px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)]">
+      <dt className="text-xs text-[var(--text-muted)]">{label}</dt>
+      <dd className="text-sm font-semibold font-mono break-words text-[var(--text-primary)]">{value}</dd>
     </div>
   )
 }
@@ -34,29 +25,19 @@ function ProjectCard({ project }: { project: Project }) {
   const contentId = `project-content-${project.id}`
 
   return (
-    <GlowCard
-      customSize
-      glowColor="purple"
-      className="overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl z-10 w-full"
+    <Card
+      as="article"
+      className="overflow-hidden flex flex-col w-full"
       aria-label={`Project: ${project.title} — ${project.subtitle}`}
     >
       {/* Card header */}
       <div className="p-6 pb-5">
-        <div className="flex items-start justify-between gap-4 mb-3">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Badge variant="accent" mono>{project.period}</Badge>
-            </div>
-            <h3
-              className="text-xl font-bold leading-tight"
-              style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}
-            >
-              {project.title}
-            </h3>
-            <p className="text-sm mt-0.5" style={{ color: 'var(--accent)' }}>
-              {project.subtitle}
-            </p>
-          </div>
+        <div className="mb-3">
+          <Badge variant="accent" mono>{project.period}</Badge>
+          <h3 className="text-xl font-bold leading-tight mt-2 text-[var(--text-primary)]">
+            {project.title}
+          </h3>
+          <p className="text-sm mt-0.5 text-[var(--accent)]">{project.subtitle}</p>
         </div>
 
         <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -71,11 +52,11 @@ function ProjectCard({ project }: { project: Project }) {
         </div>
 
         {/* Impact metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-5">
+        <dl className="grid grid-cols-2 gap-2 mt-5">
           {project.impact.map((m) => (
             <ImpactMetric key={m.label} label={m.label} value={m.value} />
           ))}
-        </div>
+        </dl>
       </div>
 
       {/* STAR Expand button */}
@@ -90,8 +71,12 @@ function ProjectCard({ project }: { project: Project }) {
           color: 'var(--text-secondary)',
         }}
       >
-        <span>{expanded ? 'Hide Details' : 'View STAR Breakdown'}</span>
-        {expanded ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
+        <span>{expanded ? 'Hide details' : 'View STAR breakdown'}</span>
+        <ChevronDown
+          size={16}
+          aria-hidden="true"
+          className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {/* STAR Content */}
@@ -107,7 +92,7 @@ function ProjectCard({ project }: { project: Project }) {
             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
-            <div className="px-6 pb-6 space-y-5">
+            <div className="px-6 pt-5 pb-6 space-y-5 border-t border-[var(--border)]">
 
               {/* Situation — fully visible */}
               <div>
@@ -124,7 +109,7 @@ function ProjectCard({ project }: { project: Project }) {
               <div className="relative rounded-xl overflow-hidden">
 
                 {/* Skeleton placeholder — no real data rendered here */}
-                <div className="space-y-5 animate-pulse" aria-hidden="true">
+                <div className="space-y-5" aria-hidden="true">
 
                   {/* Task skeleton */}
                   <div>
@@ -168,32 +153,27 @@ function ProjectCard({ project }: { project: Project }) {
                 <div
                   className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl"
                   style={{
-                    background: 'color-mix(in srgb, var(--bg-card) 60%, transparent)',
+                    background: 'color-mix(in srgb, var(--bg-card) 85%, transparent)',
                     backdropFilter: 'blur(2px)',
                     WebkitBackdropFilter: 'blur(2px)',
                   }}
                 >
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
-                    style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}
-                    aria-hidden="true"
-                  >
-                    🔒
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)]">
+                    <Lock size={18} aria-hidden="true" />
                   </div>
                   <div className="text-center px-4">
                     <p className="text-sm font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>
-                      The full story is reserved.
+                      Task, Action &amp; Result are shared on request.
                     </p>
-                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                      Reach out to unlock Task, Action &amp; Result.
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                      Get in touch and I&apos;ll walk you through it.
                     </p>
                   </div>
                   <a
                     href="#contact"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 hover:scale-105 active:scale-95"
-                    style={{ background: 'var(--accent)', color: '#ffffff' }}
+                    className="inline-flex items-center px-4 py-2.5 rounded-lg text-sm font-semibold bg-[var(--accent)] text-[var(--accent-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)]"
                   >
-                    Contact me to unlock →
+                    Ask me for the full story
                   </a>
                 </div>
               </div>
@@ -202,60 +182,49 @@ function ProjectCard({ project }: { project: Project }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </GlowCard>
+    </Card>
   )
 }
 
 export function Projects({ projects }: { projects: Project[] }) {
+  const featured = projects.filter((p) => p.featured)
+
   return (
-    <section
-      id="projects"
-      aria-label="Featured projects"
-      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-    >
-      <div
-        className="w-full py-16 md:py-24 px-6 md:px-12 rounded-[2.5rem] overflow-hidden"
-        style={{ background: 'var(--bg-secondary)' }}
-      >
-        <div className="w-full max-w-6xl mx-auto">
-          <AnimatedSection>
-            <SectionHeading
-              label="Featured Projects"
-              title="Selected work"
-              subtitle="Three systems I designed, built, and shipped end-to-end. Each story told in the STAR format — Situation, Task, Action, Result."
-            />
+    <Section id="projects" label="Featured projects" tone="muted">
+      <AnimatedSection>
+        <SectionHeading
+          label="Featured Projects"
+          title="Selected work"
+          subtitle="Systems I designed, built, and shipped end-to-end. Each one opens with the situation it started from."
+        />
+      </AnimatedSection>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-12 items-start">
+        {featured.map((project, index) => (
+          <AnimatedSection key={project.id} delay={index * 0.15} className="w-full">
+            <ProjectCard project={project} />
           </AnimatedSection>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-20 pb-16 items-start">
-            {projects.filter((p) => p.featured).map((project, index) => (
-              <AnimatedSection key={project.id} delay={index * 0.15} className="w-full">
-                <ProjectCard project={project} />
-              </AnimatedSection>
-            ))}
-          </div>
-
-          <AnimatedSection delay={0.4} className="w-full mt-4 flex justify-center pb-8 border-t pt-16 relative" style={{ borderColor: 'var(--border)' }}>
-            <div className="text-center px-4 w-full flex flex-col items-center max-w-3xl mx-auto space-y-5">
-              <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-balance" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}>
-                Want to know more about my other work?
-              </h3>
-              <p className="text-base md:text-lg text-balance" style={{ color: 'var(--text-secondary)' }}>
-                I have built and contributed to various other projects and initiatives, from internal tools to experimental prototypes. Let's get in touch to discuss them!
-              </p>
-              <div className="pt-6">
-                <a
-                  href="#contact"
-                  className="group inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
-                  style={{ background: 'var(--text-primary)', color: 'var(--bg-primary)' }}
-                >
-                  <span className="relative">Contact Me</span>
-                </a>
-              </div>
-            </div>
-          </AnimatedSection>
-
-        </div>
+        ))}
       </div>
-    </section>
+
+      <AnimatedSection delay={0.2} className="mt-16 pt-12 border-t border-[var(--border)]">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="max-w-2xl">
+            <h3 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
+              Want to know more about my other work?
+            </h3>
+            <p className="text-base mt-2 text-[var(--text-secondary)]">
+              I have built and contributed to other projects too, from internal tools to experimental prototypes. Happy to walk you through them.
+            </p>
+          </div>
+          <a
+            href="#contact"
+            className="inline-flex items-center justify-center shrink-0 self-start md:self-auto px-6 py-3 rounded-lg text-sm font-semibold bg-[var(--accent)] text-[var(--accent-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)]"
+          >
+            Contact me
+          </a>
+        </div>
+      </AnimatedSection>
+    </Section>
   )
 }

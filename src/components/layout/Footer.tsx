@@ -1,96 +1,38 @@
-'use client'
-
-import { GitBranch, Link2, Mail, X, User } from 'lucide-react'
+import { getSocialLinks } from '@/components/ui/social'
 
 export function Footer({ personal }: { personal: any }) {
-  const socialLinks = [
-    {
-      href: personal.github,
-      label: 'GitHub',
-      icon: GitBranch,
-      id: 'footer-github',
-    },
-    {
-      href: personal.linkedin,
-      label: 'LinkedIn',
-      icon: Link2,
-      id: 'footer-linkedin',
-    },
-    {
-      href: `mailto:${personal.email}`,
-      label: 'Email',
-      icon: Mail,
-      id: 'footer-email',
-    },
-    {
-      href: personal.x,
-      label: 'X',
-      icon: X,
-      id: 'footer-x',
-    },
-    {
-      href: personal.thread,
-      label: 'Threads',
-      icon: User,
-      id: 'footer-threads',
-    },
-  ]
-
+  const socialLinks = getSocialLinks(personal)
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer
-      role="contentinfo"
-      className="mt-0 px-6 py-10"
-      style={{ borderTop: '1px solid var(--border)', background: 'var(--bg-secondary)' }}
-    >
-      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        {/* Left: name + tagline */}
+    <footer className="py-10 border-t border-[var(--border)] bg-[var(--bg-secondary)]">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="text-center sm:text-left">
-          <p
-            className="font-mono text-sm font-semibold"
-            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
-          >
-            <span style={{ color: 'var(--accent)' }}>~/</span>
+          <p className="font-mono text-sm font-semibold text-[var(--text-primary)]">
+            <span className="text-[var(--accent)]">~/</span>
             {personal.shortName.toLowerCase().replace(' ', '.')}
           </p>
-          <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-xs mt-0.5 text-[var(--text-muted)]">
             © {currentYear} {personal.name}. Built with Next.js.
           </p>
         </div>
 
-        {/* Right: social links */}
-        <div className="flex items-center gap-3">
-          {socialLinks.map(({ href, label, icon: Icon, id }) => (
-            <a
-              key={id}
-              id={id}
-              href={href}
-              aria-label={label}
-              target={href.startsWith('mailto') ? undefined : '_blank'}
-              rel={href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
-              className="w-9 h-9 flex items-center justify-center rounded-lg cursor-pointer transition-all duration-200"
-              style={{
-                color: 'var(--text-muted)',
-                border: '1px solid var(--border)',
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLElement
-                el.style.color = 'var(--accent)'
-                el.style.borderColor = 'var(--accent)'
-                el.style.background = 'var(--accent-subtle)'
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement
-                el.style.color = 'var(--text-muted)'
-                el.style.borderColor = 'var(--border)'
-                el.style.background = 'transparent'
-              }}
-            >
-              <Icon size={16} aria-hidden="true" />
-            </a>
+        <ul className="flex items-center gap-2 list-none">
+          {socialLinks.map(({ id, href, label, icon: Icon, external }) => (
+            <li key={id}>
+              <a
+                id={`footer-${id}`}
+                href={href}
+                aria-label={label}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+                className="w-11 h-11 flex items-center justify-center rounded-lg border border-[var(--border)] text-[var(--text-muted)] transition-colors duration-200 hover:text-[var(--accent)] hover:border-[var(--accent)] hover:bg-[var(--accent-subtle)]"
+              >
+                <Icon size={18} aria-hidden="true" />
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </footer>
   )

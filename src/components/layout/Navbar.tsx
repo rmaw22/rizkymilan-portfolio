@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { ThemeToggle } from './ThemeToggle'
 
 const navLinks = [
@@ -13,6 +14,11 @@ const navLinks = [
   { href: '#contact', label: 'Contact' },
   { href: '/playground', label: 'Playground' },
 ]
+
+const sectionIds = navLinks.filter((l) => l.href.startsWith('#')).map((l) => l.href.slice(1))
+
+const ctaClass =
+  'items-center justify-center text-sm font-medium rounded-lg bg-[var(--accent)] text-[var(--accent-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)]'
 
 export function Navbar({ personal }: { personal: any }) {
   const pathname = usePathname()
@@ -24,6 +30,7 @@ export function Navbar({ personal }: { personal: any }) {
 
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState<string | null>(null)
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -31,145 +38,165 @@ export function Navbar({ personal }: { personal: any }) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Highlight the section currently crossing the middle of the viewport
+  useEffect(() => {
+    if (isPlayground || typeof IntersectionObserver === 'undefined') return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const id = entry.target.id
+          setActiveSection((current) =>
+            entry.isIntersecting ? id : current === id ? null : current
+          )
+        }
+      },
+      { rootMargin: '-45% 0px -50% 0px' }
+    )
+    for (const id of sectionIds) {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    }
+    return () => observer.disconnect()
+  }, [isPlayground])
+
+  useEffect(() => {
+    if (!isMobileOpen) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsMobileOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [isMobileOpen])
+
   const closeMobile = () => setIsMobileOpen(false)
+
+  const currentFor = (href: string) => {
+    if (href === '/playground') return isPlayground ? ('page' as const) : undefined
+    return !isPlayground && activeSection === href.slice(1) ? ('location' as const) : undefined
+  }
 
   return (
     <>
-      <header
-        id="navbar"
-        role="banner"
-        className="fixed z-50 transition-all duration-300"
-        style={{
-          top: '1rem',
-          left: '1rem',
-          right: '1rem',
-        }}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-medium focus:bg-[var(--accent)] focus:text-[var(--accent-fg)]"
       >
-        <nav
-          aria-label="Main navigation"
-          className="flex items-center justify-between px-5 py-3 rounded-xl transition-all duration-300"
-          style={{
-            background: isScrolled
-              ? 'color-mix(in srgb, var(--bg-card) 90%, transparent)'
-              : 'color-mix(in srgb, var(--bg-card) 70%, transparent)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            border: `1px solid var(--border)`,
-            boxShadow: isScrolled ? '0 4px 24px rgba(0,0,0,0.08)' : 'none',
-          }}
-        >
-          {/* Logo / Name */}
-          <a
-            href={isPlayground ? '/' : '#'}
-            aria-label="Back to top"
-            className="font-mono text-sm font-semibold tracking-tight cursor-pointer transition-colors duration-200 hover:opacity-70"
-            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
+        Skip to content
+      </a>
+
+      <header id="navbar" className="fixed z-50 top-4 inset-x-4">
+        <nav aria-label="Main navigation">
+          <div
+            className="flex items-center justify-between pl-5 pr-3 py-2 rounded-xl border border-[var(--border)] transition-shadow duration-300"
+            style={{
+              background: `color-mix(in srgb, var(--bg-card) ${isScrolled ? 92 : 80}%, transparent)`,
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              boxShadow: isScrolled ? '0 4px 24px rgba(0,0,0,0.08)' : 'none',
+            }}
           >
-            <span style={{ color: 'var(--accent)' }}>~/</span>
-            {personal.shortName.toLowerCase().replace(' ', '.')}
-          </a>
-
-          {/* Desktop nav links */}
-          <ul className="hidden md:flex items-center gap-1 list-none" role="list">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={resolveHref(link.href)}
-                  className="px-3 py-1.5 text-sm rounded-lg cursor-pointer transition-colors duration-200 hover:bg-[var(--bg-secondary)]"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          {/* Right side: Theme toggle + Resume CTA */}
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
             <a
-              href={personal.resumeUrl}
-              id="nav-resume-btn"
-              aria-label="Request resume via email"
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium rounded-lg cursor-pointer transition-all duration-200"
-              style={{
-                background: 'var(--accent)',
-                color: '#ffffff',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'var(--accent-hover)'
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'var(--accent)'
-              }}
+              href={isPlayground ? '/' : '#'}
+              aria-label={`${personal.shortName} — home`}
+              className="font-mono text-sm font-semibold tracking-tight py-3 text-[var(--text-primary)] transition-opacity duration-200 hover:opacity-70"
             >
-              Request CV
+              <span className="text-[var(--accent)]">~/</span>
+              {personal.shortName.toLowerCase().replace(' ', '.')}
             </a>
 
-            {/* Mobile menu toggle */}
-            <button
-              id="mobile-menu-toggle"
-              className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg cursor-pointer transition-colors duration-200"
-              style={{
-                background: 'var(--bg-secondary)',
-                color: 'var(--text-secondary)',
-                border: '1px solid var(--border)',
-              }}
-              onClick={() => setIsMobileOpen(!isMobileOpen)}
-              aria-label={isMobileOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={isMobileOpen}
-              aria-controls="mobile-menu"
-            >
-              {isMobileOpen ? <X size={16} aria-hidden="true" /> : <Menu size={16} aria-hidden="true" />}
-            </button>
-          </div>
-        </nav>
-
-        {/* Mobile drawer */}
-        <AnimatePresence>
-          {isMobileOpen && (
-            <motion.div
-              id="mobile-menu"
-              role="dialog"
-              aria-label="Mobile navigation menu"
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden mt-2 rounded-xl overflow-hidden"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
-              }}
-            >
-              <ul className="flex flex-col py-2 list-none" role="list">
-                {navLinks.map((link) => (
+            {/* Desktop nav links */}
+            <ul className="hidden md:flex items-center gap-1 list-none">
+              {navLinks.map((link) => {
+                const current = currentFor(link.href)
+                return (
                   <li key={link.href}>
                     <a
                       href={resolveHref(link.href)}
-                      onClick={closeMobile}
-                      className="flex px-5 py-3 text-sm cursor-pointer transition-colors duration-200 hover:bg-[var(--bg-secondary)]"
-                      style={{ color: 'var(--text-primary)' }}
+                      aria-current={current}
+                      className={cn(
+                        'px-3 py-2 text-sm rounded-lg transition-colors duration-200 hover:bg-[var(--bg-secondary)]',
+                        current
+                          ? 'font-semibold text-[var(--accent)]'
+                          : 'text-[var(--text-secondary)]'
+                      )}
                     >
                       {link.label}
                     </a>
                   </li>
-                ))}
-                <li className="px-5 py-3">
-                  <a
-                    href={personal.resumeUrl}
-                    onClick={closeMobile}
-                    className="flex items-center justify-center w-full py-2 text-sm font-medium rounded-lg cursor-pointer"
-                    style={{ background: 'var(--accent)', color: '#ffffff' }}
-                  >
-                    Request CV
-                  </a>
-                </li>
-              </ul>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                )
+              })}
+            </ul>
+
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <a
+                href={personal.resumeUrl}
+                id="nav-resume-btn"
+                className={cn('hidden sm:inline-flex h-11 px-4', ctaClass)}
+              >
+                Request CV
+              </a>
+
+              <button
+                id="mobile-menu-toggle"
+                className="md:hidden w-11 h-11 flex items-center justify-center rounded-lg cursor-pointer border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)]"
+                onClick={() => setIsMobileOpen(!isMobileOpen)}
+                aria-label={isMobileOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isMobileOpen}
+                aria-controls="mobile-menu"
+              >
+                {isMobileOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile menu */}
+          <AnimatePresence>
+            {isMobileOpen && (
+              <motion.div
+                id="mobile-menu"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="md:hidden mt-2 rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--bg-card)]"
+                style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
+              >
+                <ul className="flex flex-col py-2 list-none">
+                  {navLinks.map((link) => {
+                    const current = currentFor(link.href)
+                    return (
+                      <li key={link.href}>
+                        <a
+                          href={resolveHref(link.href)}
+                          onClick={closeMobile}
+                          aria-current={current}
+                          className={cn(
+                            'flex px-5 py-3 text-base transition-colors duration-200 hover:bg-[var(--bg-secondary)]',
+                            current
+                              ? 'font-semibold text-[var(--accent)]'
+                              : 'text-[var(--text-primary)]'
+                          )}
+                        >
+                          {link.label}
+                        </a>
+                      </li>
+                    )
+                  })}
+                  <li className="px-5 py-3 sm:hidden">
+                    <a
+                      href={personal.resumeUrl}
+                      onClick={closeMobile}
+                      className={cn('flex w-full h-11', ctaClass)}
+                    >
+                      Request CV
+                    </a>
+                  </li>
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </nav>
       </header>
     </>
   )

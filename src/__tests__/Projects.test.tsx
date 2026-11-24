@@ -22,10 +22,10 @@ describe('Projects section', () => {
     expect(screen.getByRole('heading', { name: /selected work/i })).toBeInTheDocument()
   })
 
-  it('renders all 3 featured projects', () => {
+  it('renders every featured project as an article', () => {
     render(<Projects projects={projects as any[]} />)
     const articles = screen.getAllByRole('article')
-    expect(articles).toHaveLength(3)
+    expect(articles).toHaveLength(projects.filter((p) => p.featured).length)
   })
 
   it('renders each project title', () => {
@@ -64,16 +64,15 @@ describe('Projects section', () => {
     expect(orionExpand.getAttribute('aria-expanded')).toBe('false')
   })
 
-  it('shows STAR sections when expanded', () => {
+  it('shows the situation and the request prompt when expanded', () => {
     render(<Projects projects={projects as any[]} />)
     const orionExpand = document.getElementById('project-expand-orion')!
     fireEvent.click(orionExpand)
 
-    // Should show STAR labels
+    // Situation is public; Task, Action and Result are shared on request
     expect(screen.getAllByText('Situation').length).toBeGreaterThanOrEqual(1)
-    expect(screen.getAllByText('Task').length).toBeGreaterThanOrEqual(1)
-    expect(screen.getAllByText('Action').length).toBeGreaterThanOrEqual(1)
-    expect(screen.getAllByText('Result').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText(/shared on request/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /ask me for the full story/i })).toHaveAttribute('href', '#contact')
   })
 
   it('renders impact metrics', () => {

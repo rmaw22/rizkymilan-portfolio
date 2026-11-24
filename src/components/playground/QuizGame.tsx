@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { Check, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Quiz } from '@/data/playground/quiz'
 
@@ -62,6 +63,7 @@ export function QuizGame({ quiz, onClose }: Props) {
 
   const q = quiz.questions[current]
   const pct = Math.round((score / quiz.questions.length) * 100)
+  const primaryBtn = 'px-5 py-2.5 rounded-lg text-sm font-medium cursor-pointer bg-[var(--accent)] text-[var(--accent-fg)] transition-colors duration-200 hover:bg-[var(--accent-hover)]'
 
   if (phase === 'idle') {
     return (
@@ -71,10 +73,9 @@ export function QuizGame({ quiz, onClose }: Props) {
         </p>
         <button
           onClick={start}
-          className="px-8 py-2.5 rounded-lg text-sm font-medium text-white"
-          style={{ background: 'var(--accent)' }}
+          className={primaryBtn}
         >
-          Start Quiz
+          Start quiz
         </button>
       </div>
     )
@@ -96,19 +97,25 @@ export function QuizGame({ quiz, onClose }: Props) {
             return (
               <div key={i} className="rounded-lg p-3 text-sm" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}>
                 <p className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>{question.question}</p>
-                <p className={cn('text-xs', correct ? 'text-green-500' : 'text-red-400')}>
-                  {correct ? '✓ Correct' : `✗ You chose: ${userAnswer !== null ? question.options[userAnswer] : 'no answer'}`}
+                <p className="flex items-center gap-1 text-xs font-medium" style={{ color: correct ? 'var(--terminal)' : 'var(--danger)' }}>
+                  {correct ? <Check size={14} aria-hidden="true" /> : <X size={14} aria-hidden="true" />}
+                  {correct ? 'Correct' : `You chose: ${userAnswer !== null ? question.options[userAnswer] : 'no answer'}`}
                 </p>
+                {!correct && (
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-primary)' }}>
+                    Answer: {question.options[question.answer]}
+                  </p>
+                )}
                 {!correct && <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>{question.explanation}</p>}
               </div>
             )
           })}
         </div>
         <div className="flex gap-3 mt-2">
-          <button onClick={start} className="px-5 py-2 rounded-lg text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
+          <button onClick={start} className={primaryBtn}>
             Retry
           </button>
-          <button onClick={onClose} className="px-5 py-2 rounded-lg text-sm font-medium" style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+          <button onClick={onClose} className="px-5 py-2.5 rounded-lg text-sm font-medium cursor-pointer" style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}>
             Close
           </button>
         </div>
@@ -123,7 +130,8 @@ export function QuizGame({ quiz, onClose }: Props) {
         <span className="text-xs font-mono" style={{ color: 'var(--text-secondary)' }}>
           {current + 1} / {quiz.questions.length}
         </span>
-        <span className={cn('text-xs font-mono font-semibold tabular-nums', timeLeft <= 10 ? 'text-red-400' : '')} style={timeLeft > 10 ? { color: 'var(--accent)' } : {}}>
+        <span className="text-xs font-mono font-semibold tabular-nums" style={{ color: timeLeft <= 10 ? 'var(--danger)' : 'var(--accent)' }}>
+          <span className="sr-only">Time left: </span>
           {timeLeft}s
         </span>
       </div>
@@ -132,7 +140,7 @@ export function QuizGame({ quiz, onClose }: Props) {
       <div className="h-1 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
         <div
           className="h-full rounded-full transition-all duration-1000"
-          style={{ width: `${(timeLeft / quiz.durationSeconds) * 100}%`, background: timeLeft <= 10 ? '#f87171' : 'var(--accent)' }}
+          style={{ width: `${(timeLeft / quiz.durationSeconds) * 100}%`, background: timeLeft <= 10 ? 'var(--danger)' : 'var(--accent)' }}
         />
       </div>
 
@@ -151,16 +159,31 @@ export function QuizGame({ quiz, onClose }: Props) {
               onClick={() => handleSelect(i)}
               disabled={selected !== null}
               className={cn(
-                'text-left px-4 py-2.5 rounded-lg text-sm transition-all duration-150',
-                selected === null ? 'hover:border-[var(--accent)]' : ''
+                'flex items-center justify-between gap-3 text-left px-4 py-3 rounded-lg text-sm border transition-colors duration-150',
+                selected === null ? 'cursor-pointer hover:border-[var(--accent)]' : ''
               )}
               style={{
-                background: isCorrect ? 'rgba(34,197,94,0.1)' : isWrong ? 'rgba(248,113,113,0.1)' : 'var(--bg-secondary)',
-                border: `1px solid ${isCorrect ? '#22c55e' : isWrong ? '#f87171' : isSelected ? 'var(--accent)' : 'var(--border)'}`,
+                background: isCorrect
+                  ? 'color-mix(in srgb, var(--terminal) 10%, transparent)'
+                  : isWrong
+                    ? 'color-mix(in srgb, var(--danger) 10%, transparent)'
+                    : 'var(--bg-secondary)',
+                borderColor: isCorrect ? 'var(--terminal)' : isWrong ? 'var(--danger)' : 'var(--border)',
                 color: 'var(--text-primary)',
               }}
             >
-              {opt}
+              <span>{opt}</span>
+              {/* Icon + text so the result never depends on colour alone */}
+              {isCorrect && (
+                <span className="flex items-center gap-1 shrink-0 text-xs font-medium" style={{ color: 'var(--terminal)' }}>
+                  <Check size={14} aria-hidden="true" /> Correct
+                </span>
+              )}
+              {isWrong && (
+                <span className="flex items-center gap-1 shrink-0 text-xs font-medium" style={{ color: 'var(--danger)' }}>
+                  <X size={14} aria-hidden="true" /> Your answer
+                </span>
+              )}
             </button>
           )
         })}
@@ -169,13 +192,12 @@ export function QuizGame({ quiz, onClose }: Props) {
       {/* Explanation + Next */}
       {selected !== null && (
         <div className="flex flex-col gap-3">
-          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{q.explanation}</p>
+          <p className="text-sm" role="status" style={{ color: 'var(--text-secondary)' }}>{q.explanation}</p>
           <button
             onClick={handleNext}
-            className="self-end px-5 py-2 rounded-lg text-sm font-medium text-white"
-            style={{ background: 'var(--accent)' }}
+            className={cn('self-end', primaryBtn)}
           >
-            {current + 1 >= quiz.questions.length ? 'See Results' : 'Next →'}
+            {current + 1 >= quiz.questions.length ? 'See results' : 'Next question'}
           </button>
         </div>
       )}

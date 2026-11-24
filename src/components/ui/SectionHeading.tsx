@@ -27,7 +27,7 @@ export function SectionHeading({
       )}
       <h2
         className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight"
-        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}
+        style={{ color: 'var(--text-primary)' }}
       >
         {title}
       </h2>

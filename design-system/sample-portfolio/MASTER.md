@@ -28,15 +28,9 @@
 
 ### Typography
 
-- **Heading Font:** Archivo
-- **Body Font:** Space Grotesk
-- **Mood:** minimal, portfolio, designer, creative, clean, artistic
-- **Google Fonts:** [Archivo + Space Grotesk](https://fonts.google.com/share?selection.family=Archivo:wght@300;400;500;600;700|Space+Grotesk:wght@300;400;500;600;700)
-
-**CSS Import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-```
+- **Heading + Body Font:** Plus Jakarta Sans (one family; hierarchy comes from size and weight)
+- **Mono Font:** JetBrains Mono (labels, code, handles)
+- **Loading:** `next/font/google` in `src/app/layout.tsx`, exposed as `--font-sans` / `--font-mono`
 
 ### Spacing Variables
 

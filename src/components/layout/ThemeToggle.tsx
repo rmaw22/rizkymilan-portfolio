@@ -28,7 +28,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-9 h-9 rounded-lg" style={{ background: 'var(--bg-secondary)' }} />
+      <div className="w-11 h-11 rounded-lg" style={{ background: 'var(--bg-secondary)' }} />
     )
   }
 
@@ -38,16 +38,16 @@ export function ThemeToggle() {
       onClick={cycleTheme}
       aria-label={label}
       title={label}
-      className="w-9 h-9 rounded-lg flex items-center justify-center cursor-pointer transition-colors duration-200 hover:opacity-80"
+      className="w-11 h-11 rounded-lg flex items-center justify-center cursor-pointer transition-colors duration-200 hover:opacity-80"
       style={{
         background: 'var(--bg-secondary)',
         color: 'var(--text-secondary)',
         border: '1px solid var(--border)',
       }}
     >
-      {theme === 'light' && <Sun size={16} aria-hidden="true" />}
-      {theme === 'dark' && <Moon size={16} aria-hidden="true" />}
-      {theme === 'system' && <Monitor size={16} aria-hidden="true" />}
+      {theme === 'light' && <Sun size={18} aria-hidden="true" />}
+      {theme === 'dark' && <Moon size={18} aria-hidden="true" />}
+      {theme === 'system' && <Monitor size={18} aria-hidden="true" />}
     </button>
   )
 }

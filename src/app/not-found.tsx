@@ -16,13 +16,13 @@ export default function NotFound() {
       <div className="text-center max-w-md">
         <p
           className="text-sm font-mono mb-4"
-          style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}
+          style={{ color: 'var(--accent)'}}
         >
           Error 404
         </p>
         <h1
           className="text-5xl font-bold mb-4"
-          style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-sans)' }}
+          style={{ color: 'var(--text-primary)'}}
         >
           Page not found
         </h1>

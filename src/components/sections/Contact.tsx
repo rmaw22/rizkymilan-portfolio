@@ -1,163 +1,76 @@
-'use client'
-
-import { GitBranch, Link2, Mail, MapPin, ArrowRight, X, User } from 'lucide-react'
+import { MapPin, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { SectionHeading } from '@/components/ui/SectionHeading'
+import { Section } from '@/components/ui/Section'
+import { getSocialLinks } from '@/components/ui/social'
 
 export function Contact({ personal }: { personal: any }) {
-  const contactLinks = [
-    {
-      id: 'contact-email',
-      href: `mailto:${personal.email}`,
-      label: 'Send an Email',
-      description: personal.email,
-      icon: Mail,
-      external: false,
-    },
-    {
-      id: 'contact-linkedin',
-      href: personal.linkedin,
-      label: 'Connect on LinkedIn',
-      description: 'linkedin.com/in/rizkymilan',
-      icon: Link2,
-      external: true,
-    },
-    {
-      id: 'contact-github',
-      href: personal.github,
-      label: 'Follow on GitHub',
-      description: 'github.com/rizkymilan',
-      icon: GitBranch,
-      external: true,
-    },
-    {
-      id: 'contact-x',
-      href: personal.x,
-      label: 'Follow on X',
-      description: 'x.com/milandev_',
-      icon: X,
-      external: true,
-    },
-    {
-      id: 'contact-thread',
-      href: personal.thread,
-      label: 'Follow on Thread',
-      description: 'threads.com/@milansocial.sayshi',
-      icon: User,
-      external: true,
-    },
-  ]
+  const contactLinks = getSocialLinks(personal)
 
   return (
-    <section
-      id="contact"
-      aria-label="Contact information"
-      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-    >
-      <div
-        className="w-full py-16 md:py-24 px-6 md:px-12 rounded-[2.5rem] overflow-hidden border"
-        style={{ background: 'var(--bg-primary)', borderColor: 'var(--border)' }}
-      >
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left: heading + copy */}
-            <AnimatedSection direction="left">
-              <SectionHeading
-                label="Contact"
-                title="Let's Connect"
-                subtitle="I'm always open to interesting discussions — whether it's a new opportunity, a technical challenge, or just a good conversation about systems reliability."
-              />
+    <Section id="contact" label="Contact information">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* Left: heading + copy */}
+        <AnimatedSection direction="left">
+          <SectionHeading
+            label="Contact"
+            title="Let's Connect"
+            subtitle="I'm always open to interesting discussions — whether it's a new opportunity, a technical challenge, or just a good conversation about systems reliability."
+          />
 
-              <div
-                className="flex items-center gap-2 mt-6 text-sm"
-                style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
-              >
-                <MapPin size={14} aria-hidden="true" />
-                <span>Based in {personal.location}</span>
-              </div>
+          <p className="flex items-center gap-2 mt-6 text-sm font-mono text-[var(--text-muted)]">
+            <MapPin size={14} aria-hidden="true" />
+            <span>Based in {personal.location}</span>
+          </p>
 
-              {/* Availability status */}
-              <div
-                className="inline-flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full text-xs border"
-                style={{
-                  borderColor: 'color-mix(in srgb, var(--terminal) 30%, transparent)',
-                  background: 'color-mix(in srgb, var(--terminal) 8%, transparent)',
-                  color: 'var(--terminal)',
-                }}
-              >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: 'var(--terminal)' }}
-                  aria-hidden="true"
-                />
-                Open to new opportunities
-              </div>
-            </AnimatedSection>
+          <p
+            className="inline-flex items-center gap-2 mt-4 px-3 py-1.5 rounded-full text-xs border text-[var(--terminal)]"
+            style={{
+              borderColor: 'color-mix(in srgb, var(--terminal) 30%, transparent)',
+              background: 'color-mix(in srgb, var(--terminal) 8%, transparent)',
+            }}
+          >
+            <span className="w-2 h-2 rounded-full bg-[var(--terminal)]" aria-hidden="true" />
+            Open to new opportunities
+          </p>
+        </AnimatedSection>
 
-            {/* Right: contact cards */}
-            <AnimatedSection delay={0.15}>
-              <div className="flex flex-col gap-4">
-                {contactLinks.map(({ id, href, label, description, icon: Icon, external }) => (
+        {/* Right: contact links */}
+        <AnimatedSection delay={0.15}>
+          <ul className="flex flex-col gap-3 list-none">
+            {contactLinks.map(({ id, href, cta, handle, icon: Icon, external }) => {
+              const Arrow = external ? ArrowUpRight : ArrowRight
+              return (
+                <li key={id}>
                   <a
-                    key={id}
-                    id={id}
+                    id={`contact-${id}`}
                     href={href}
-                    aria-label={label}
                     target={external ? '_blank' : undefined}
                     rel={external ? 'noopener noreferrer' : undefined}
-                    className="group flex items-center gap-4 p-5 rounded-2xl border cursor-pointer transition-all duration-200 hover:shadow-md no-underline"
-                    style={{
-                      background: 'var(--bg-card)',
-                      borderColor: 'var(--border)',
-                      color: 'var(--text-primary)',
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLElement
-                      el.style.borderColor = 'var(--accent)'
-                      el.style.background = 'var(--accent-subtle)'
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLElement
-                      el.style.borderColor = 'var(--border)'
-                      el.style.background = 'var(--bg-card)'
-                    }}
+                    className="group flex items-center gap-4 p-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-primary)] no-underline transition-colors duration-200 hover:border-[var(--accent)] hover:bg-[var(--accent-subtle)]"
                   >
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-200"
-                      style={{
-                        background: 'var(--accent-subtle)',
-                        color: 'var(--accent)',
-                      }}
-                    >
-                      <Icon size={22} aria-hidden="true" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div
-                        className="text-sm font-semibold"
-                        style={{ color: 'var(--text-primary)' }}
-                      >
-                        {label}
-                      </div>
-                      <div
-                        className="text-xs mt-0.5 truncate font-mono"
-                        style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
-                      >
-                        {description}
-                      </div>
-                    </div>
-                    <ArrowRight
+                    <span className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-[var(--accent-subtle)] text-[var(--accent)]">
+                      <Icon size={20} aria-hidden="true" />
+                    </span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-sm font-semibold">{cta}</span>
+                      <span className="block text-xs mt-0.5 truncate font-mono text-[var(--text-muted)]">
+                        {handle}
+                      </span>
+                    </span>
+                    {external && <span className="sr-only">(opens in a new tab)</span>}
+                    <Arrow
                       size={16}
                       aria-hidden="true"
-                      className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1"
-                      style={{ color: 'var(--text-muted)' }}
+                      className="shrink-0 text-[var(--text-muted)] transition-transform duration-200 group-hover:translate-x-0.5"
                     />
                   </a>
-                ))}
-              </div>
-            </AnimatedSection>
-          </div>
-        </div>
+                </li>
+              )
+            })}
+          </ul>
+        </AnimatedSection>
       </div>
-    </section>
+    </Section>
   )
 }

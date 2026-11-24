@@ -27,7 +27,7 @@
 | Styling | Tailwind CSS v4 + Vanilla CSS variables |
 | Animation | [Framer Motion](https://www.framer.com/motion/) |
 | Icons | [Lucide React](https://lucide.dev/) |
-| Fonts | Inter, Space Grotesk, JetBrains Mono (via `next/font`) |
+| Fonts | Plus Jakarta Sans, JetBrains Mono (via `next/font`) |
 | Deployment | [Cloudflare Pages](https://pages.cloudflare.com/) |
 | Testing | Vitest + Testing Library |
 

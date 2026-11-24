@@ -10,14 +10,12 @@ import { journey } from '@/data/journey'
 
 export default function HomePage() {
   return (
-    <main className="flex flex-col w-full min-h-screen">
+    <div className="flex flex-col w-full min-h-screen">
       <Hero personal={personal} />
-      <div className="flex flex-col gap-8 md:gap-16 py-8 md:py-16 w-full">
-        <About personal={personal} journey={journey} />
-        <Skills skillCategories={skillCategories} />
-        <Projects projects={projects} />
-        <Contact personal={personal} />
-      </div>
-    </main>
+      <About personal={personal} journey={journey} />
+      <Skills skillCategories={skillCategories} />
+      <Projects projects={projects} />
+      <Contact personal={personal} />
+    </div>
   )
 }

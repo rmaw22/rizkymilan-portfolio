@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
-import { ArrowDownToLine, GitBranch, Terminal, Server, ShieldCheck } from "lucide-react";
+import { Check, Github, Mail, Terminal, Server, ShieldCheck, Star } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -43,7 +43,7 @@ const INJECTED_STYLES = `
   }
 
   .text-silver-matte {
-      background: linear-gradient(180deg, var(--text-primary) 0%, color-mix(in srgb, var(--text-primary) 40%, transparent) 100%);
+      background: linear-gradient(180deg, var(--text-primary) 0%, color-mix(in srgb, var(--text-primary) 65%, transparent) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -178,6 +178,7 @@ export interface CinematicHeroProps extends React.HTMLAttributes<HTMLDivElement>
   cardDescription?: React.ReactNode;
   metricValue?: number;
   metricLabel?: string;
+  yearsExperience?: number;
   ctaHeading?: string;
   ctaDescription?: string;
   appDownloadLink?: string;
@@ -192,8 +193,9 @@ export function CinematicHero({
   cardDescription = <><span className="text-white font-semibold">Ukirama</span> SRE infrastructure tracking via Prometheus and Grafana, keeping monolithic and microservice instances highly available.</>,
   metricValue = 100,
   metricLabel = "Uptime Percentage",
+  yearsExperience = 4,
   ctaHeading = "Level Up Your Infrastructure.",
-  ctaDescription = "Download my resume or view my GitHub to see my engineering journey.",
+  ctaDescription = "Request my resume by email or review my code on GitHub.",
   appDownloadLink = "#",
   githubLink = "#",
   className,
@@ -207,6 +209,8 @@ export function CinematicHero({
 
   // 1. High-Performance Mouse Interaction Logic (Using requestAnimationFrame)
   useEffect(() => {
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (window.scrollY > window.innerHeight * 2) return;
 
@@ -245,7 +249,16 @@ export function CinematicHero({
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
 
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
     const ctx = gsap.context(() => {
+      // Reduced motion: static headline, no pinned scroll sequence.
+      // The résumé and GitHub links stay reachable from the navbar and Contact.
+      if (reduceMotion) {
+        gsap.set([".text-track", ".text-days"], { autoAlpha: 1 });
+        return;
+      }
+
       gsap.set(".text-track", { autoAlpha: 0, y: 60, scale: 0.85, filter: "blur(20px)", rotationX: -20 });
       gsap.set(".text-days", { autoAlpha: 1, clipPath: "inset(0 100% 0 0)" });
       gsap.set(".main-card", { y: window.innerHeight + 200, autoAlpha: 1 });
@@ -318,11 +331,13 @@ export function CinematicHero({
 
       {/* BACKGROUND LAYER: Hero Texts */}
       <div className="hero-text-wrapper absolute z-10 flex flex-col items-center justify-center text-center w-full px-4 will-change-transform transform-style-3d">
-        <h1 className="text-track gsap-reveal text-3d-matte text-5xl md:text-7xl lg:text-[6rem] font-bold tracking-tight mb-2">
-          {tagline1}
-        </h1>
-        <h1 className="text-days gsap-reveal text-silver-matte text-5xl md:text-7xl lg:text-[6rem] font-extrabold tracking-tighter pb-2">
-          {tagline2}
+        <h1 className="text-5xl md:text-7xl lg:text-[6rem]">
+          <span className="text-track gsap-reveal text-3d-matte block font-bold tracking-tight mb-2">
+            {tagline1}
+          </span>
+          <span className="text-days gsap-reveal text-silver-matte block font-extrabold tracking-tighter pb-[0.2em]">
+            {tagline2}
+          </span>
         </h1>
       </div>
 
@@ -331,21 +346,21 @@ export function CinematicHero({
         <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-silver-matte">
           {ctaHeading}
         </h2>
-        <p className="text-muted text-lg md:text-xl mb-12 max-w-xl mx-auto font-light leading-relaxed">
+        <p className="text-[var(--text-secondary)] text-lg md:text-xl mb-12 max-w-xl mx-auto leading-relaxed">
           {ctaDescription}
         </p>
         <div className="flex flex-col sm:flex-row gap-6">
-          <a href={appDownloadLink} download aria-label="Download Resume" className="btn-modern-light flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2">
-            <ArrowDownToLine className="w-8 h-8 transition-transform group-hover:scale-105" aria-hidden="true" />
+          <a href={appDownloadLink} className="btn-modern-light flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group">
+            <Mail className="w-7 h-7 transition-transform group-hover:scale-105" aria-hidden="true" />
             <div className="text-left">
-              <div className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase mb-[-2px]">Download my</div>
-              <div className="text-xl font-bold leading-none tracking-tight">Resume.pdf</div>
+              <div className="text-xs font-bold tracking-wider text-neutral-600 uppercase">Request my</div>
+              <div className="text-xl font-bold leading-none tracking-tight">Resume</div>
             </div>
           </a>
-          <a href={githubLink} target="_blank" rel="noopener noreferrer" aria-label="View Github" className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]">
-            <GitBranch className="w-7 h-7 transition-transform group-hover:scale-105" aria-hidden="true" />
+          <a href={githubLink} target="_blank" rel="noopener noreferrer" className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group">
+            <Github className="w-7 h-7 transition-transform group-hover:scale-105" aria-hidden="true" />
             <div className="text-left">
-              <div className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-[-2px]">Review my code on</div>
+              <div className="text-xs font-bold tracking-wider text-neutral-300 uppercase">Review my code on</div>
               <div className="text-xl font-bold leading-none tracking-tight">GitHub</div>
             </div>
           </a>
@@ -379,6 +394,7 @@ export function CinematicHero({
                 {/* The Macbook Bezel */}
                 <div
                   ref={mockupRef}
+                  aria-hidden="true"
                   className="relative w-[340px] md:w-[680px] h-[220px] md:h-[420px] rounded-xl md:rounded-[1.5rem] bg-[#1a1a1a] flex flex-col will-change-transform transform-style-3d shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] border-4 md:border-8 border-[#333]"
                 >
                   <div className="absolute top-1 md:top-2 left-1/2 -translate-x-1/2 w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-[#050505] z-50 flex items-center justify-center">
@@ -413,7 +429,7 @@ export function CinematicHero({
                               <span className="counter-val text-3xl font-extrabold tracking-tighter text-white leading-none">0</span>
                               <span className="text-lg font-bold mb-0.5 ml-1 text-white leading-none">%</span>
                             </div>
-                            <span className="text-[7.5px] text-emerald-200/50 uppercase tracking-[0.05em] font-bold mt-1.5 text-center leading-tight max-w-[100px]">Uptime Coverage</span>
+                            <span className="text-[7.5px] text-emerald-200/50 uppercase tracking-[0.05em] font-bold mt-1.5 text-center leading-tight max-w-[100px]">{metricLabel}</span>
                           </div>
                         </div>
 
@@ -460,21 +476,21 @@ export function CinematicHero({
                 {/* Floating Glass Badges */}
                 <div className="floating-badge absolute flex top-6 lg:top-12 left-[-15px] lg:left-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 lg:gap-4 z-30">
                   <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-blue-500/20 to-blue-900/10 flex items-center justify-center border border-blue-400/30 shadow-inner">
-                    <span className="text-base lg:text-xl drop-shadow-lg text-blue-400" aria-hidden="true">★</span>
+                    <Star className="w-4 h-4 lg:w-5 lg:h-5 text-blue-400" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">4+ Years</p>
-                    <p className="text-blue-200/50 text-[10px] lg:text-xs font-medium">Experience</p>
+                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">{yearsExperience}+ Years</p>
+                    <p className="text-blue-200/80 text-[10px] lg:text-xs font-medium">Experience</p>
                   </div>
                 </div>
 
                 <div className="floating-badge absolute flex bottom-12 lg:bottom-20 right-[-15px] lg:right-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 lg:gap-4 z-30">
                   <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-emerald-500/20 to-emerald-900/10 flex items-center justify-center border border-emerald-400/30 shadow-inner">
-                    <span className="text-base lg:text-lg drop-shadow-lg text-emerald-400" aria-hidden="true">✔</span>
+                    <Check className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-400" aria-hidden="true" />
                   </div>
                   <div>
                     <p className="text-white text-xs lg:text-sm font-bold tracking-tight">Production Safe</p>
-                    <p className="text-emerald-200/50 text-[10px] lg:text-xs font-medium">0 Downtime</p>
+                    <p className="text-emerald-200/80 text-[10px] lg:text-xs font-medium">0 Downtime</p>
                   </div>
                 </div>
 

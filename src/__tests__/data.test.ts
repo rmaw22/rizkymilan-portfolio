@@ -16,7 +16,7 @@ describe('personal data', () => {
     expect(personal.github).toMatch(/^https:\/\//)
     expect(personal.linkedin).toMatch(/^https:\/\//)
     expect(personal.location).toBeTruthy()
-    expect(personal.resumeUrl).toMatch(/^\//)
+    expect(personal.resumeUrl).toMatch(/^mailto:/)
   })
 
   it('has valid stats', () => {

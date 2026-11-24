@@ -16,7 +16,8 @@ export function Hero({ personal }: { personal: any }) {
         metricValue={100}
         metricLabel="Observability Coverage"
         ctaHeading="Building Reliable & Scalable Systems."
-        ctaDescription={`Download my resume or view my GitHub to see my engineering journey.`}
+        ctaDescription="Request my resume by email or review my code on GitHub."
+        yearsExperience={personal.stats.yearsExperience}
         appDownloadLink={personal.resumeUrl}
         githubLink={personal.github}
       />
