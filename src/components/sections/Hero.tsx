@@ -5,9 +5,9 @@ export function Hero({ personal }: { personal: any }) {
     <section id="hero" aria-label="Hero — Introduction">
       <CinematicHero
         brandName={personal.shortName}
-        tagline1={personal.name}
+        tagline1={personal.shortName}
         tagline2={personal.role}
-        cardHeading="Scale, redefined."
+        cardHeading="Observability, built from scratch."
         cardDescription={
           <span className="text-blue-100/70 text-sm md:text-base lg:text-lg font-normal leading-relaxed">
             <strong className="text-white font-semibold">Ukirama</strong> SRE infrastructure tracking via Prometheus and Grafana, keeping monolithic and microservice instances highly available.
@@ -15,6 +15,8 @@ export function Hero({ personal }: { personal: any }) {
         }
         metricValue={100}
         metricLabel="Observability Coverage"
+        highlightTitle="4 Teams Enabled"
+        highlightDetail="ORION dashboards"
         ctaHeading="Building Reliable & Scalable Systems."
         ctaDescription="Request my resume by email or review my code on GitHub."
         yearsExperience={personal.stats.yearsExperience}

@@ -179,6 +179,8 @@ export interface CinematicHeroProps extends React.HTMLAttributes<HTMLDivElement>
   metricValue?: number;
   metricLabel?: string;
   yearsExperience?: number;
+  highlightTitle?: string;
+  highlightDetail?: string;
   ctaHeading?: string;
   ctaDescription?: string;
   appDownloadLink?: string;
@@ -194,6 +196,8 @@ export function CinematicHero({
   metricValue = 100,
   metricLabel = "Uptime Percentage",
   yearsExperience = 4,
+  highlightTitle = "Production Ready",
+  highlightDetail = "Monitored 24/7",
   ctaHeading = "Level Up Your Infrastructure.",
   ctaDescription = "Request my resume by email or review my code on GitHub.",
   appDownloadLink = "#",
@@ -274,7 +278,7 @@ export function CinematicHero({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=5000", /* shortened for less aggressive scroll pin */
+          end: "+=2500", /* ~3 viewports of pinned scroll */
           pin: true,
           scrub: 1,
           anticipatePin: 1,
@@ -331,11 +335,11 @@ export function CinematicHero({
 
       {/* BACKGROUND LAYER: Hero Texts */}
       <div className="hero-text-wrapper absolute z-10 flex flex-col items-center justify-center text-center w-full px-4 will-change-transform transform-style-3d">
-        <h1 className="text-5xl md:text-7xl lg:text-[6rem]">
-          <span className="text-track gsap-reveal text-3d-matte block font-bold tracking-tight mb-2">
+        <h1>
+          <span className="text-track gsap-reveal text-3d-matte block text-6xl md:text-8xl lg:text-[7rem] font-bold tracking-tight mb-4">
             {tagline1}
           </span>
-          <span className="text-days gsap-reveal text-silver-matte block font-extrabold tracking-tighter pb-[0.2em]">
+          <span className="text-days gsap-reveal text-silver-matte block text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight pb-[0.2em]">
             {tagline2}
           </span>
         </h1>
@@ -343,7 +347,7 @@ export function CinematicHero({
 
       {/* BACKGROUND LAYER 2: Tactile CTA Buttons */}
       <div className="cta-wrapper absolute z-10 flex flex-col items-center justify-center text-center w-full px-4 gsap-reveal pointer-events-auto will-change-transform">
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-silver-matte">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight text-silver-matte max-w-3xl mx-auto pb-[0.1em]">
           {ctaHeading}
         </h2>
         <p className="text-[var(--text-secondary)] text-lg md:text-xl mb-12 max-w-xl mx-auto leading-relaxed">
@@ -489,8 +493,8 @@ export function CinematicHero({
                     <Check className="w-4 h-4 lg:w-5 lg:h-5 text-emerald-400" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">Production Safe</p>
-                    <p className="text-emerald-200/80 text-[10px] lg:text-xs font-medium">0 Downtime</p>
+                    <p className="text-white text-xs lg:text-sm font-bold tracking-tight">{highlightTitle}</p>
+                    <p className="text-emerald-200/80 text-[10px] lg:text-xs font-medium">{highlightDetail}</p>
                   </div>
                 </div>
 
